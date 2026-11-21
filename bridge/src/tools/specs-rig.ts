@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { PassThroughSpec } from "../tooling/define.js";
-import { frame, hexColor, layerId } from "./schema.js";
+import { frame, hexColor, layerId, LIMITS } from "./schema.js";
 
 const pointIndex = z.number().int().min(0);
 
@@ -109,7 +109,7 @@ export const rigSpecs: PassThroughSpec[] = [
       "Low-level: create a fill/stroke shape from point indices (a closed loop for a filled shape). Colors are hex strings.",
     shape: {
       layerId,
-      pointIndices: z.array(pointIndex).min(2),
+      pointIndices: z.array(pointIndex).min(2).max(LIMITS.pointIndices),
       filled: z.boolean().optional(),
       frame: z.number().optional(),
       name: z.string().optional(),
@@ -142,7 +142,7 @@ export const rigSpecs: PassThroughSpec[] = [
     method: "mesh.bindPoints",
     description:
       "Bind mesh points to a bone so the bone deforms them. boneId: -1 unbind, -2 flexi-bind to all bones, otherwise a bone index. See rig_bindLayerToBone to bind a whole layer.",
-    shape: { layerId, pointIndices: z.array(pointIndex).min(1), boneId: z.number().int() },
+    shape: { layerId, pointIndices: z.array(pointIndex).min(1).max(LIMITS.pointIndices), boneId: z.number().int() },
   },
   {
     method: "mesh.setShapeStyle",

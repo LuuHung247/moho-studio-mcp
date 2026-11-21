@@ -9,6 +9,7 @@ import type { BoneInfo } from "../recipes/types.js";
 import { runBatch, type Operation } from "../tooling/batch.js";
 import { callMoho, defineCustomTool } from "../tooling/define.js";
 import { successContent } from "../tooling/results.js";
+import { LIMITS } from "./schema.js";
 
 /** layer.getBones returns a bare array; tolerate {bones: []} as well. */
 export async function fetchBones(client: MohoClient, layerId: number): Promise<BoneInfo[]> {
@@ -46,6 +47,22 @@ const boneSpecSchema = z.object({
   x: z.number().optional().describe("Root bones only: world position"),
   y: z.number().optional(),
   attach: z.enum(["tip", "start"]).optional().describe("Child bones: attach at parent's tip (default) or start"),
+});
+
+const smartPoseSchema = z.object({
+  frame: z.number(),
+  bones: z
+    .array(
+      z.object({
+        boneId: z.number().int(),
+        angle: z.number().optional(),
+        posX: z.number().optional(),
+        posY: z.number().optional(),
+        scale: z.number().optional(),
+      }),
+    )
+    .min(1)
+    .max(LIMITS.bonesPerPose),
 });
 
 export function registerRigTools(server: McpServer, client: MohoClient): void {
@@ -144,22 +161,7 @@ export function registerRigTools(server: McpServer, client: MohoClient): void {
     shape: {
       layerId: z.number().int().describe("Bone layer"),
       controlBoneId: z.number().int().describe("The bone that becomes the dial"),
-      poses: z
-        .array(
-          z.object({
-            frame: z.number(),
-            bones: z.array(
-              z.object({
-                boneId: z.number().int(),
-                angle: z.number().optional(),
-                posX: z.number().optional(),
-                posY: z.number().optional(),
-                scale: z.number().optional(),
-              }),
-            ).min(1),
-          }),
-        )
-        .min(1),
+      poses: z.array(smartPoseSchema).min(1).max(LIMITS.poses),
     },
     handler: async ({ layerId, controlBoneId, poses }) => {
       const control = (await fetchBones(client, layerId)).find((b) => b.id === controlBoneId);

@@ -14,6 +14,7 @@ import { runBatch } from "../tooling/batch.js";
 import { defineCustomTool } from "../tooling/define.js";
 import { successContent } from "../tooling/results.js";
 import { fetchBones } from "./rig.js";
+import { LIMITS } from "./schema.js";
 
 async function runRecipe(client: MohoClient, name: string, ops: Operation[]) {
   const summary = await runBatch(client, ops);
@@ -100,14 +101,14 @@ export function registerAnimTools(server: McpServer, client: MohoClient): void {
     shape: {
       startFrame: z.number().default(1),
       endFrame: z.number(),
-      at: z.array(z.number()).optional(),
+      at: z.array(z.number()).max(LIMITS.keys).optional(),
       interval: z.number().optional().describe("Average frames between blinks (default 72)"),
       seed: z.number().optional(),
       closedFor: z.number().optional().describe("Frames eyes stay closed (default 3)"),
       switchLayerId: z.number().int().optional(),
       openChild: z.string().optional(),
       closedChild: z.string().optional(),
-      eyeLayerIds: z.array(z.number().int()).optional(),
+      eyeLayerIds: z.array(z.number().int()).max(LIMITS.layerIds).optional(),
     },
     handler: async (args) => runRecipe(client, "blink", blinkOps(args)),
   });
@@ -141,7 +142,7 @@ export function registerAnimTools(server: McpServer, client: MohoClient): void {
     name: "anim_fade",
     description: "Fade layers in or out (opacity from -> to over a frame range). Use 0 -> 1 to fade in, 1 -> 0 to fade out.",
     shape: {
-      layerIds: z.array(z.number().int()).min(1),
+      layerIds: z.array(z.number().int()).min(1).max(LIMITS.layerIds),
       from: z.number().min(0).max(1),
       to: z.number().min(0).max(1),
       startFrame: z.number(),

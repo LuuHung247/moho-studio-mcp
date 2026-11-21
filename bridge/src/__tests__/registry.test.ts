@@ -10,6 +10,7 @@ const pluginDir = path.resolve(__dirname, "../../../moho-plugin");
 interface Registered {
   name: string;
   description: string;
+  shape: Record<string, unknown>;
   handler: (args: Record<string, unknown>) => Promise<{ content: Array<{ text: string }>; isError?: boolean }>;
 }
 
@@ -17,8 +18,8 @@ function makeServer() {
   const tools: Registered[] = [];
   return {
     tools,
-    tool(name: string, description: string, _shape: unknown, handler: Registered["handler"]) {
-      tools.push({ name, description, handler });
+    tool(name: string, description: string, shape: Record<string, unknown>, handler: Registered["handler"]) {
+      tools.push({ name, description, shape, handler });
     },
   };
 }
@@ -41,6 +42,35 @@ function luaMethodsIn(file: string, pattern: RegExp): string[] {
   return [...src.matchAll(pattern)].map((m) => m[1] as string);
 }
 
+/** Collect the path of every array schema without a max length. */
+function unboundedArrays(schema: any, where: string, out: string[] = []): string[] {
+  const def = schema?._def;
+  if (!def) return out;
+  switch (def.typeName) {
+    case "ZodArray":
+      if (def.maxLength === null || def.maxLength === undefined) out.push(where);
+      unboundedArrays(def.type, `${where}[]`, out);
+      break;
+    case "ZodObject":
+      for (const [k, v] of Object.entries(def.shape())) unboundedArrays(v, `${where}.${k}`, out);
+      break;
+    case "ZodOptional":
+    case "ZodNullable":
+      unboundedArrays(def.innerType, where, out);
+      break;
+    case "ZodDefault":
+      unboundedArrays(def.innerType, where, out);
+      break;
+    case "ZodUnion":
+      def.options.forEach((o: unknown, i: number) => unboundedArrays(o, `${where}|${i}`, out));
+      break;
+    case "ZodRecord":
+      unboundedArrays(def.valueType, `${where}{}`, out);
+      break;
+  }
+  return out;
+}
+
 describe("tool registry", () => {
   let server: ReturnType<typeof makeServer>;
   let client: ReturnType<typeof makeClient>;
@@ -60,6 +90,13 @@ describe("tool registry", () => {
     for (const t of server.tools) {
       expect(t.description.length, t.name).toBeGreaterThan(10);
     }
+  });
+
+  it("bounds every array parameter (zod memory-exhaustion advisory GHSA-mrhx-c7xc-m3w5)", () => {
+    const offenders = server.tools.flatMap((t) =>
+      Object.entries(t.shape).flatMap(([k, v]) => unboundedArrays(v, `${t.name}.${k}`)),
+    );
+    expect(offenders).toEqual([]);
   });
 
   it("exposes the high-level production tools", () => {

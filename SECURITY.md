@@ -11,7 +11,7 @@
 - Request IPC bị xoá trước khi xử lý và có khoá chống chạy lồng nhau.
 
 Còn lại (chấp nhận, nên biết):
-- `zod@3` có advisory DoS bộ nhớ với mảng cực lớn; bản sửa buộc lên zod 4 (đổi lớn). Dữ liệu đến từ client cục bộ nên rủi ro thấp.
+- `zod@3` advisory DoS bộ nhớ (GHSA-mrhx-c7xc-m3w5) chỉ khai thác được qua mảng không giới hạn độ dài. Đã đặt `.max()` cho mọi mảng tham số (hằng số `LIMITS` trong `bridge/src/tools/schema.ts`) và `registry.test.ts` sẽ fail nếu có mảng nào thiếu giới hạn. `npm audit` vẫn báo zod vì chỉ báo theo số phiên bản; nâng lên zod 4 chờ SDK hỗ trợ.
 - Thư mục IPC nằm trong `%TEMP%` của user (Windows: chỉ user đó truy cập). Trên macOS/Linux `/tmp` dùng chung — đặt `MOHO_MCP_IPC_DIR` vào thư mục riêng 0700.
 - `keep-alive.ps1` chạy với `-ExecutionPolicy Bypass` từ `%TEMP%`; tiến trình cùng user vốn đã có quyền tương đương.
 - Plugin Lua cài vào Program Files phải chạy `install-plugin.bat` bằng Administrator.

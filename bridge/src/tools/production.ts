@@ -11,6 +11,7 @@ import {
   assertSafePath, buildConcatArgs, buildConcatList, buildEncodeArgs, buildMuxArgs, formatFor, runFfmpeg,
 } from "../render/ffmpeg.js";
 import { chunk } from "../tooling/batch.js";
+import { LIMITS } from "./schema.js";
 import { callMoho, defineCustomTool } from "../tooling/define.js";
 import { successContent } from "../tooling/results.js";
 
@@ -113,7 +114,7 @@ export function registerProductionTools(server: McpServer, client: MohoClient): 
     description:
       "Join scene videos into one film, in the order given. Fast stream copy by default (all inputs must share codec, size and fps — true for videos from render_exportVideo with the same settings); set reencode=true to normalise mismatched inputs.",
     shape: {
-      inputs: z.array(z.string()).min(2).describe("Absolute paths, in playback order"),
+      inputs: z.array(z.string().max(4096)).min(2).max(LIMITS.videos).describe("Absolute paths, in playback order"),
       outputPath: z.string(),
       reencode: z.boolean().optional(),
     },
