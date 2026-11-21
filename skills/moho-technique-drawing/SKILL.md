@@ -13,6 +13,12 @@ Source: Moho 13.5 Tutorial Manual (Drawing chapter); 14.x behaves the same unles
 - Welding also keeps neighboring shapes joined during animation: shapes that must stay glued (arm to shoulder) should share welded points. In cutout style prefer overlapping rounded shapes instead.
 - Name layers and shapes (`name` param). Draw large parts first, details on top.
 
+## How shapes are built in the GUI (Tutorial 1.2–1.3)
+- *Add Point* tool: click+drag to start a segment, click a curve's END point and drag to extend it. Clicking a point in the MIDDLE of a curve starts a new curve **permanently welded** to it (branching shapes like clouds, trees). Drag an endpoint onto another point (Auto-Weld highlights it green) to close the loop; with Auto Fill the closed shape fills with color.
+- *Draw Shape* tool: Oval/Rectangle etc.; **Shift** = perfect circle/square, **Alt** = from center. *Transform Points* with nothing selected scales the whole shape; with one point selected it reshapes. Copy/Paste duplicates a shape on top of the original, then scale/move it (varied clouds, leaves).
+- Style panel effects **[GUI]**: *Gradient* fill (linear/radial, colors + direction handles) for hills and skies; *Soft Edge* stroke effect for fluffy outlines; line width 1 = nearly invisible outline. **[API]** equivalent for flat looks: `fillColor` with alpha, overlapping lighter/darker shapes.
+- Equivalents via MCP: `draw_polygon`/`draw_ellipse` do the closing, welding and filling in one call.
+
 ## Techniques
 | Need | How |
 |---|---|

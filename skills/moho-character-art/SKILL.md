@@ -54,7 +54,7 @@ Total height ≈ 1.3 (y −0.7 … 0.65). For another size, pass `scale` and `x`
 
 ## Props and backgrounds
 - Background = its own vector layers drawn first (sky `draw_rect` covering x −2…2, y −1.2…1.2; ground; hills via `draw_polygon` smooth 1). See `moho-scene-camera`.
-- User-supplied art: `project_import` (PNG/SVG/PSD) instead of drawing.
+- User-supplied art: `project_import` (PNG/SVG/PSD) instead of drawing. For PNG parts, photos or AI-generated images (cutout from images, image warping, one flat picture) read `moho-technique-images` first.
 
 ## Palette hints
 Skin `#C68642`/`#F1C27D`, fur brown `#8B5A2B`, outline `#2B1B12`, sky `#8FD3FF`, grass `#5CB85C`, sun `#FFD93D`, cloud `#FFFFFF`. Keep strong value contrast between character and background.

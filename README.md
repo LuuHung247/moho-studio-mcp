@@ -46,7 +46,7 @@ codex mcp add moho -- cmd /c npx -y https://github.com/LuuHung247/moho-studio-mc
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz doctor
 ```
 
-**Cài bộ skill cho agent** (17 skill: 10 skill quy trình — định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa, GUI dự phòng, xử lý sự cố — và 7 skill **kỹ thuật** rút từ Tutorial Manual chính thức của Moho: vẽ, bone/binding, lip-sync, timeline/cycling/actions, frame-by-frame, chiều sâu/hiệu ứng, tái sử dụng/reference layer; mỗi bước ghi rõ `[API]` làm được bằng tool hay `[GUI]` phải thao tác giao diện):
+**Cài bộ skill cho agent** (18 skill: 10 skill quy trình — định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa, GUI dự phòng, xử lý sự cố — và 8 skill **kỹ thuật** rút từ Tutorial Manual chính thức của Moho: vẽ, bone/binding, lip-sync, timeline/cycling/actions, frame-by-frame, ảnh bitmap/warp, chiều sâu/hiệu ứng, tái sử dụng/reference layer; mỗi bước ghi rõ `[API]` làm được bằng tool hay `[GUI]` phải thao tác giao diện):
 
 ```powershell
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-skills
@@ -87,7 +87,7 @@ npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/mo
 ```
 Sau đó **khởi động lại Moho và agent** (Codex/Claude) để nạp plugin, skill và server mới.
 
-Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.2.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.2.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
+Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.3.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.3.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
 
 **Dán cho agent tự cập nhật:** *"Cập nhật Moho Studio MCP lên bản mới nhất: xoá cache npx, chạy install-plugin và install-skills từ link latest, chạy doctor và --version rồi báo kết quả; nhắc tôi khởi động lại Moho và agent."*
 
