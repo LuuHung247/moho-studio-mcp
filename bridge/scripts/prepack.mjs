@@ -15,6 +15,8 @@ for (const f of ["MohoMCP_Server.lua", "MohoMCP_Poller.lua", "json.lua"]) {
   fs.copyFileSync(path.join(repo, "moho-plugin", f), path.join(dest, f));
 }
 fs.cpSync(path.join(repo, "moho-plugin", "moho_mcp"), path.join(dest, "moho_mcp"), { recursive: true });
+fs.rmSync(path.join(bridge, "skills"), { recursive: true, force: true });
+fs.cpSync(path.join(repo, "skills"), path.join(bridge, "skills"), { recursive: true });
 fs.copyFileSync(path.join(repo, "LICENSE"), path.join(bridge, "LICENSE"));
 fs.copyFileSync(path.join(repo, "README.md"), path.join(bridge, "README.md"));
-console.log("plugin copied into bridge/plugin");
+console.log("plugin and skills copied into bridge/");

@@ -46,6 +46,13 @@ codex mcp add moho -- cmd /c npx -y https://github.com/LuuHung247/moho-studio-mc
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz doctor
 ```
 
+**Cài bộ skill cho agent** (10 skill: định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa theo phản hồi, GUI dự phòng, xử lý sự cố):
+
+```powershell
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-skills
+```
+Lệnh copy vào `%USERPROFILE%\.codex\skills` (hoặc `$CODEX_HOME/skills`) và `%USERPROFILE%\.claude\skills`; thêm `--target codex` hoặc `--target claude` để chọn một nơi. Khởi động lại agent rồi nói: *"Dùng skill moho-studio, vẽ cho tôi…"*. Mã nguồn skill nằm ở [skills/](skills); mọi ví dụ trong đó được test tự động đối chiếu với schema tool thật.
+
 **macOS / Linux-shell**: giống trên, bỏ `cmd /c`: `codex mcp add moho -- npx -y <URL>`. Claude Code: `claude mcp add moho -- npx -y <URL>`.
 
 Hoặc ghi tay vào `%USERPROFILE%\.codex\config.toml` ([mẫu](codex-config.toml.example)):
@@ -77,7 +84,8 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 - **`system_selfTest`**: tự kiểm tra toàn bộ đường API trên đúng bản Moho của bạn.
 - **Sửa lỗi**: installer Windows/macOS gốc *không copy* `image/particle/switch.lua` (3 nhóm tool không chạy được); plugin có thể chạy cùng một request 2 lần nếu Moho vẽ lại trong lúc xử lý — đã thêm khoá chống re-entry.
 - **Bridge viết lại**: 56 khối try/catch giống hệt → bảng khai báo; batch tự chia lô (tối đa 200 thao tác/lô); test hợp đồng giữa bridge và danh sách cho phép của plugin.
-- **Kiểm thử**: 138 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
+- **Bộ skill** cho agent (Codex / Claude Code), kiểm chứng bằng test.
+- **Kiểm thử**: 186 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
 
 ## Giới hạn — nói thật
 
@@ -90,7 +98,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 ## Phát triển
 
 ```bash
-cd bridge && npm test            # 138 test TS (cần npm run build trước cho e2e)
+cd bridge && npm test            # 186 test TS (cần npm run build trước cho e2e)
 lua moho-plugin/tests/run_tests.lua   # test Lua (mock Moho)
 npm run docs                     # sinh lại docs/tool-reference.md
 ```

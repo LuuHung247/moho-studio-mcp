@@ -1,5 +1,7 @@
 # Moho Studio MCP — instructions for coding agents
 
+Task skills live in `skills/` (install with `install-skills`); start from `skills/moho-studio/SKILL.md`. When you change a tool's name or parameters, update the skills — `skills.test.ts` validates every example.
+
 This file is read by Codex and other agents working in this repository or using its MCP server. It mirrors the playbook the server sends on connect (`moho://guide/production`).
 
 # Moho Studio MCP — production playbook

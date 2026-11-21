@@ -6,15 +6,18 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { config } from "../config.js";
 import { findMohoRoot, installPlugin, InstallError, scriptsDir } from "./install-plugin.js";
+import { installSkills, type SkillTarget } from "./install-skills.js";
 
 const PACKAGE_ROOT = path.resolve(__dirname, "..", "..");
 const PLUGIN_SRC = path.join(PACKAGE_ROOT, "plugin");
+const SKILLS_SRC = path.join(PACKAGE_ROOT, "skills");
 
 const HELP = `moho-studio-mcp ${config.server.version}
 
 Usage:
   moho-studio-mcp                     Start the MCP server (stdio) — this is what Codex/Claude run
   moho-studio-mcp install-plugin      Copy the Lua plugin into Moho  [--moho-dir <folder>]
+  moho-studio-mcp install-skills      Copy the agent skills for Codex / Claude Code  [--target codex|claude|all] [--dir <folder>]
   moho-studio-mcp doctor              Check Node, ffmpeg, Moho and the plugin
   moho-studio-mcp --version
 `;
@@ -35,6 +38,24 @@ function runInstall(args: string[]): number {
     return 0;
   } catch (err) {
     console.error(err instanceof InstallError ? `ERROR: ${err.message}` : err);
+    return 1;
+  }
+}
+
+function runInstallSkills(args: string[]): number {
+  const t = flag(args, "--target") ?? "all";
+  if (!["codex", "claude", "all"].includes(t)) {
+    console.error('ERROR: --target must be "codex", "claude" or "all"');
+    return 1;
+  }
+  const targets: SkillTarget[] = t === "all" ? ["codex", "claude"] : [t as SkillTarget];
+  try {
+    const r = installSkills({ skillsSrc: SKILLS_SRC, targets, dir: flag(args, "--dir") });
+    for (const d of r.destinations) console.log(`Installed ${d.skills.length} skills to ${d.dir}`);
+    console.log("\nRestart the agent so it picks them up. Start a task with: \"Dùng skill moho-studio để ...\"");
+    return 0;
+  } catch (err) {
+    console.error(`ERROR: ${(err as Error).message}`);
     return 1;
   }
 }
@@ -80,6 +101,7 @@ export function runCli(argv: string[]): number | null {
   const [cmd, ...rest] = argv;
   switch (cmd) {
     case "install-plugin": return runInstall(rest);
+    case "install-skills": return runInstallSkills(rest);
     case "doctor": return runDoctor();
     case "--version": case "-v": console.log(config.server.version); return 0;
     case "--help": case "-h": case "help": console.log(HELP); return 0;
