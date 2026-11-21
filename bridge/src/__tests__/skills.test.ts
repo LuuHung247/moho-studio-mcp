@@ -19,7 +19,7 @@ registerTools(
   { isConnected: vi.fn(), connect: vi.fn(), sendRequest: vi.fn() } as unknown as MohoClient,
 );
 
-const read = (name: string) => fs.readFileSync(path.join(SKILLS_DIR, name, "SKILL.md"), "utf8");
+const read = (name: string) => fs.readFileSync(path.join(SKILLS_DIR, name, "SKILL.md"), "utf8").replace(/\r\n/g, "\n");
 
 function frontmatter(text: string): Record<string, string> {
   const m = /^---\n([\s\S]*?)\n---\n/.exec(text);

@@ -1,0 +1,5 @@
+# Skills and plugin sources must keep LF so frontmatter parses the same everywhere
+skills/** text eol=lf
+moho-plugin/**/*.lua text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
