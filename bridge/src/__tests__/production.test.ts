@@ -1,3 +1,4 @@
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { buildConcatArgs, buildConcatList, buildEncodeArgs, buildMuxArgs, formatFor, runFfmpeg } from "../render/ffmpeg.js";
 import { chunk, runBatch } from "../tooling/batch.js";
@@ -12,7 +13,7 @@ describe("buildEncodeArgs", () => {
     const args = buildEncodeArgs({ ...base, outputPath: "/out/a.mp4" });
     expect(args).toContain("libx264");
     expect(args).toContain("yuv420p");
-    expect(args[args.indexOf("-i") + 1]).toBe("/tmp/f/frame_%05d.png");
+    expect(args[args.indexOf("-i") + 1]).toBe(path.join("/tmp/f", "frame_%05d.png"));
     expect(args[args.indexOf("-start_number") + 1]).toBe("1");
     expect(args[args.indexOf("-framerate") + 1]).toBe("24");
     expect(args.join(" ")).toContain("trunc(iw/2)*2");
@@ -41,7 +42,8 @@ describe("buildEncodeArgs", () => {
 describe("concat", () => {
   it("escapes single quotes and resolves paths in the list file", () => {
     const list = buildConcatList(["/a/it's.mp4", "/b.mp4"]);
-    expect(list).toBe("file '/a/it'\\''s.mp4'\nfile '/b.mp4'\n");
+    const q = (p: string) => `file '${path.resolve(p).replace(/'/g, "'\\''")}'`;
+    expect(list).toBe(`${q("/a/it's.mp4")}\n${q("/b.mp4")}\n`);
   });
 
   it("copies streams unless re-encode is requested", () => {
@@ -119,10 +121,10 @@ describe("path safety", () => {
 
 describe("renderRoot", () => {
   it("uses the temp folder when it is plain ASCII", () => {
-    expect(renderRoot("/tmp", {})).toBe("/tmp/moho-mcp");
+    expect(renderRoot("/tmp", {})).toBe(path.join("/tmp", "moho-mcp"));
   });
   it("falls back to a drive-root folder when the temp path has non-ASCII characters", () => {
-    expect(renderRoot("/home/Nguyễn/tmp", {})).toBe("/moho-mcp");
+    expect(renderRoot("/home/Nguyễn/tmp", {})).toBe(path.join(path.parse("/home/Nguyễn/tmp").root, "moho-mcp"));
   });
   it("honours MOHO_MCP_RENDER_DIR", () => {
     expect(renderRoot("/tmp", { MOHO_MCP_RENDER_DIR: "D:\\r" })).toBe("D:\\r");
