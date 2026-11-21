@@ -1,0 +1,2543 @@
+{
+  "count": 86,
+  "tools": [
+    {
+      "name": "system_ping",
+      "description": "Check that Moho is reachable. Returns the Moho version, plugin version and whether a document is open. Call this first in every session.",
+      "params": []
+    },
+    {
+      "name": "system_selfTest",
+      "description": "Run an end-to-end self test inside Moho (creates a temporary vector layer and bone layer, draws shapes, keyframes a bone, renders a frame, then deletes everything). Returns pass/fail per step. Run it once per Moho install before a long production job: it tells you exactly which API paths work on this Moho build. A document must be open.",
+      "params": [
+        {
+          "name": "cleanup",
+          "required": false,
+          "type": "optional",
+          "description": "Delete the temporary layers afterwards (default true)"
+        }
+      ]
+    },
+    {
+      "name": "document_getInfo",
+      "description": "Get information about the open document: name, path, size, FPS, start/end frame, duration, layer counts.",
+      "params": []
+    },
+    {
+      "name": "document_getLayers",
+      "description": "Get the full layer tree (hierarchy) of the open document.",
+      "params": []
+    },
+    {
+      "name": "document_setFrame",
+      "description": "Move the timeline playhead to a frame.",
+      "params": [
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        }
+      ]
+    },
+    {
+      "name": "document_save",
+      "description": "Save the document. Pass filePath to Save As; omit it to save in place.",
+      "params": [
+        {
+          "name": "filePath",
+          "required": false,
+          "type": "optional",
+          "description": "Absolute path for Save As (.moho)"
+        }
+      ]
+    },
+    {
+      "name": "document_undo",
+      "description": "Undo the most recent change. Returns success=false when there is nothing to undo.",
+      "params": []
+    },
+    {
+      "name": "document_redo",
+      "description": "Redo the most recently undone change.",
+      "params": []
+    },
+    {
+      "name": "document_setCamera",
+      "description": "Animate the document camera at a frame: 3D position (posX/posY/posZ), tilt/pan/roll in radians, and zoom (1 = default, >1 zooms in). Only supplied components are written.",
+      "params": [
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "posX",
+          "required": false,
+          "type": "optional",
+          "description": "Camera X position"
+        },
+        {
+          "name": "posY",
+          "required": false,
+          "type": "optional",
+          "description": "Camera Y position"
+        },
+        {
+          "name": "posZ",
+          "required": false,
+          "type": "optional",
+          "description": "Camera Z position (dolly)"
+        },
+        {
+          "name": "tilt",
+          "required": false,
+          "type": "optional",
+          "description": "Tilt around X (radians)"
+        },
+        {
+          "name": "pan",
+          "required": false,
+          "type": "optional",
+          "description": "Pan around Y (radians)"
+        },
+        {
+          "name": "roll",
+          "required": false,
+          "type": "optional",
+          "description": "Roll around Z (radians)"
+        },
+        {
+          "name": "zoom",
+          "required": false,
+          "type": "optional",
+          "description": "Zoom; 1.0 = default field of view"
+        }
+      ]
+    },
+    {
+      "name": "render_frame",
+      "description": "Render one frame of the document to an image file (png recommended). Unlike document_screenshot it writes to the path you choose, e.g. for thumbnails or storyboards.",
+      "params": [
+        {
+          "name": "filePath",
+          "required": true,
+          "type": "string",
+          "description": "Absolute output path, e.g. D:\\Phim\\thumb.png"
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": "Frame to render (default: current)"
+        }
+      ]
+    },
+    {
+      "name": "project_new",
+      "description": "Create a new empty document and optionally configure it. WARNING: replaces the active document — save first. Typical film settings: 1920x1080 at 24 fps.",
+      "params": [
+        {
+          "name": "width",
+          "required": false,
+          "type": "optional",
+          "description": "Pixel width"
+        },
+        {
+          "name": "height",
+          "required": false,
+          "type": "optional",
+          "description": "Pixel height"
+        },
+        {
+          "name": "fps",
+          "required": false,
+          "type": "optional",
+          "description": "Frames per second"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": false,
+          "type": "optional",
+          "description": "Last frame (length = endFrame - startFrame + 1)"
+        },
+        {
+          "name": "backgroundColor",
+          "required": false,
+          "type": "optional",
+          "description": "Background color as #RRGGBB or #RRGGBBAA"
+        }
+      ]
+    },
+    {
+      "name": "project_open",
+      "description": "Open an existing .moho project. WARNING: replaces the active document.",
+      "params": [
+        {
+          "name": "filePath",
+          "required": true,
+          "type": "string",
+          "description": "Absolute path to the .moho file"
+        }
+      ]
+    },
+    {
+      "name": "project_setProperties",
+      "description": "Change settings of the open document: size, FPS, start/end frame, background color. Only supplied fields change.",
+      "params": [
+        {
+          "name": "width",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "height",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fps",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "backgroundColor",
+          "required": false,
+          "type": "optional",
+          "description": "Background color as #RRGGBB or #RRGGBBAA"
+        }
+      ]
+    },
+    {
+      "name": "project_import",
+      "description": "Import a file as a new layer: image (PNG/JPG/PSD), vector (SVG, EPS/AI), audio (WAV/MP3) or video. Set asImageSequence=true to import a numbered image sequence. Returns the new layer's id when Moho exposes it.",
+      "params": [
+        {
+          "name": "filePath",
+          "required": true,
+          "type": "string",
+          "description": "Absolute path of the file to import"
+        },
+        {
+          "name": "asImageSequence",
+          "required": false,
+          "type": "optional",
+          "description": "Treat the path as the first image of a sequence (or a folder)"
+        },
+        {
+          "name": "mode",
+          "required": false,
+          "type": "optional",
+          "description": "Advanced: Moho FileImport mode (default 0)"
+        }
+      ]
+    },
+    {
+      "name": "layer_getProperties",
+      "description": "Get a layer's properties: type, visibility, lock state, opacity and transform.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "layer_getChildren",
+      "description": "Get the direct children of a group layer.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the group layer"
+        }
+      ]
+    },
+    {
+      "name": "layer_getBones",
+      "description": "List every bone in a bone layer (id, name, position, angle, length, parentId).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the bone layer"
+        }
+      ]
+    },
+    {
+      "name": "layer_createLayer",
+      "description": "Create a layer. If parentId (a group) is given, the new layer is created inside it. Returns the new layerId — keep it, every other tool addresses layers by this id.",
+      "params": [
+        {
+          "name": "type",
+          "required": true,
+          "type": "enum",
+          "description": "Layer type"
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": "Layer name"
+        },
+        {
+          "name": "parentId",
+          "required": false,
+          "type": "optional",
+          "description": "Absolute ID of a group to create the layer in (default: document root)"
+        }
+      ]
+    },
+    {
+      "name": "layer_deleteLayer",
+      "description": "Delete a layer by absolute ID (undoable inside Moho).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "layer_duplicate",
+      "description": "Duplicate a layer (and its children); the copy is placed above the original. Use it to clone a character for a second scene or to repeat props.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": "Name for the copy"
+        }
+      ]
+    },
+    {
+      "name": "layer_setName",
+      "description": "Rename a layer.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "name",
+          "required": true,
+          "type": "string",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_selectLayer",
+      "description": "Select a layer in the Moho UI.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "layer_setVisibility",
+      "description": "Show or hide a layer.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "visible",
+          "required": true,
+          "type": "boolean",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_setOpacity",
+      "description": "Set layer opacity at a frame (0 transparent .. 1 opaque). Animates when set at several frames.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "opacity",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_setTransform",
+      "description": "Set a layer's translation / rotation (radians) / scale at a frame. Only supplied values change. Translation and scale are 3D; Z defaults to the existing value.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "transX",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "transY",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "transZ",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "rotation",
+          "required": false,
+          "type": "optional",
+          "description": "Z rotation in radians"
+        },
+        {
+          "name": "scaleX",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "scaleY",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "scaleZ",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_setParentBone",
+      "description": "Make a layer follow a bone (e.g. parent a hand layer to a wrist bone). boneId = -1 clears. This is how art layers get attached to a rig.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": "Bone index in the parent skeleton, or -1 to clear"
+        }
+      ]
+    },
+    {
+      "name": "layer_placeInGroup",
+      "description": "Move a layer into a group. top=true places it at the top of the stack.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "parentGroupId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the destination group"
+        },
+        {
+          "name": "top",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_placeBehind",
+      "description": "Reorder: move a layer behind (below) another layer in the same group.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "behindLayerId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_activateAction",
+      "description": "Switch into editing a named action (e.g. a smart-bone dial). Keyframes set while it is active are stored in that action. Pass \"\" or omit to return to the main timeline. ALWAYS return to the main timeline afterwards.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "actionName",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_listActions",
+      "description": "List a layer's actions, which one is being edited, and which are smart-bone actions.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "layer_setBlur",
+      "description": "Animate a layer's blur amount (depth of field, focus pulls).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "amount",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "layer_setShadow",
+      "description": "Animate a layer's drop shadow. All fields optional; enabled toggles it.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "enabled",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "blur",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "angle",
+          "required": false,
+          "type": "optional",
+          "description": "Direction in radians"
+        },
+        {
+          "name": "color",
+          "required": false,
+          "type": "optional",
+          "description": "Shadow color as #RRGGBB or #RRGGBBAA"
+        }
+      ]
+    },
+    {
+      "name": "layer_setOutline",
+      "description": "Animate a layer's outline. All fields optional; enabled toggles it.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "enabled",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "width",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "color",
+          "required": false,
+          "type": "optional",
+          "description": "Outline color as #RRGGBB or #RRGGBBAA"
+        }
+      ]
+    },
+    {
+      "name": "switch_setActive",
+      "description": "Choose which child of a switch layer is visible from a frame onward. Use switch layers for mouth shapes (lip-sync), eye states (open/closed/blink) and swap-art expressions. Pass childName or childIndex.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the switch layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "childName",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "childIndex",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "switch_getActive",
+      "description": "Read which child of a switch layer is visible at a frame.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "image_setSource",
+      "description": "Set the file on an image layer (PNG/JPG/PSD, image sequence folder, or movie).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "filePath",
+          "required": true,
+          "type": "string",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "image_getSource",
+      "description": "Read an image layer's source path, pixel size and movie/PSD/sequence flags.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "particle_setEmitter",
+      "description": "Configure a particle layer (rain, snow, sparks, smoke). All settings optional; FinalizeSettings runs automatically.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "numParticles",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "displayNumParticles",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "lifetime",
+          "required": false,
+          "type": "optional",
+          "description": "Particle lifetime in frames"
+        },
+        {
+          "name": "velocity",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "velocitySpread",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "directionAngle",
+          "required": false,
+          "type": "optional",
+          "description": "Radians"
+        },
+        {
+          "name": "directionSpread",
+          "required": false,
+          "type": "optional",
+          "description": "Radians"
+        },
+        {
+          "name": "accelerationAngle",
+          "required": false,
+          "type": "optional",
+          "description": "Radians, e.g. -PI/2 for gravity"
+        },
+        {
+          "name": "accelerationRate",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "damping",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "evenlySpaced",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "orientation",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "freeFloating",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fullSpeedStart",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "randomStartTime",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "sourceWidth",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "sourceHeight",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "sourceDepth",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "randomSeed",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "bone_getProperties",
+      "description": "Get a bone's position, angle, scale, length and parent.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "bone_addBone",
+      "description": "Add a bone to a bone layer. Rest-pose fields are optional. Returns boneId (= index, assigned in creation order). For whole skeletons prefer rig_buildSkeleton / rig_buildHumanoid.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the bone layer"
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "posX",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "posY",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "angle",
+          "required": false,
+          "type": "optional",
+          "description": "Radians"
+        },
+        {
+          "name": "length",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "scale",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "parentBoneId",
+          "required": false,
+          "type": "optional",
+          "description": "Parent bone index, -1 = none"
+        }
+      ]
+    },
+    {
+      "name": "bone_deleteBone",
+      "description": "Delete a bone. recursive=true also deletes descendants; otherwise children are re-parented.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "recursive",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "bone_setRestPose",
+      "description": "Edit a bone's setup (rest) pose: position, angle, length, scale, parent, name. Unlike bone_setTransform this is not animated.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "posX",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "posY",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "angle",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "length",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "scale",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "parentBoneId",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "bone_setTransform",
+      "description": "Pose a bone at a frame (creates keyframes): angle (radians), posX/posY, scale. Only supplied values change. Use animation_setInterpolation for easing.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "angle",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "posX",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "posY",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "scale",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "bone_selectBone",
+      "description": "Select a bone in the Moho UI.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "bone_createSmartAction",
+      "description": "Create a smart-bone action named after the bone. Then call layer_activateAction with that name, pose bones with bone_setTransform at the dial's frames, and return to the main timeline. See rig_createSmartBone for the whole sequence in one call.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "mesh_getPoints",
+      "description": "List the points (vertices) of a vector layer.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the vector layer"
+        }
+      ]
+    },
+    {
+      "name": "mesh_getShapes",
+      "description": "List the shapes (fills/strokes) of a vector layer with their colors.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "mesh_getCurves",
+      "description": "List a vector layer's curves with the mapping from curve-local to mesh-global point indices. Needed before mesh_setBezierHandle.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        }
+      ]
+    },
+    {
+      "name": "mesh_addPoint",
+      "description": "Low-level: add a point at (x, y). With connectToPointId it attaches to that point; with startNewCurve (or an empty mesh) it starts a curve; otherwise it appends. For real artwork prefer draw_ellipse / draw_rect / draw_polygon / draw_polyline.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "x",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "connectToPointId",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "startNewCurve",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "mesh_createShape",
+      "description": "Low-level: create a fill/stroke shape from point indices (a closed loop for a filled shape). Colors are hex strings.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "pointIndices",
+          "required": true,
+          "type": "array",
+          "description": ""
+        },
+        {
+          "name": "filled",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fillColor",
+          "required": false,
+          "type": "optional",
+          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeColor",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeWidth",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "mesh_setPointCurvature",
+      "description": "Smooth (≈1) or sharpen (0) a vertex. Makes shapes look hand-drawn instead of polygonal.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "pointIndex",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "curvature",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "mesh_setBezierHandle",
+      "description": "Set one bezier control handle on a curve point (curve-local index — see mesh_getCurves). prePoint=true targets the incoming handle.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "curveIndex",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "curvePointIndex",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "x",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "prePoint",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "syncAngles",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "mesh_bindPoints",
+      "description": "Bind mesh points to a bone so the bone deforms them. boneId: -1 unbind, -2 flexi-bind to all bones, otherwise a bone index. See rig_bindLayerToBone to bind a whole layer.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "pointIndices",
+          "required": true,
+          "type": "array",
+          "description": ""
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "mesh_setShapeStyle",
+      "description": "Restyle an existing shape: fill/stroke color (animatable via frame), stroke width, name, and hasFill/hasOutline toggles.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "shapeIndex",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fillColor",
+          "required": false,
+          "type": "optional",
+          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeColor",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeWidth",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "hasFill",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "hasOutline",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "animation_getKeyframes",
+      "description": "List keyframes of a channel on a layer.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "channel",
+          "required": true,
+          "type": "string",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "animation_getFrameState",
+      "description": "Get a layer's full animated state at a frame.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        }
+      ]
+    },
+    {
+      "name": "animation_setKeyframe",
+      "description": "Set a keyframe on a channel: a number for scalar channels (rotation, opacity), {x, y} for vec2 channels (translation, scale).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "channel",
+          "required": true,
+          "type": "string",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "value",
+          "required": true,
+          "type": "union",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "animation_deleteKeyframe",
+      "description": "Delete a keyframe.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "channel",
+          "required": true,
+          "type": "string",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        }
+      ]
+    },
+    {
+      "name": "animation_setInterpolation",
+      "description": "Set easing on an existing keyframe: \"linear\", \"smooth\", \"ease_in\", \"ease_out\" or \"step\". Use \"step\" for blinks/pops and \"smooth\" for natural motion.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the layer"
+        },
+        {
+          "name": "channel",
+          "required": true,
+          "type": "string",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": true,
+          "type": "number",
+          "description": "Frame number"
+        },
+        {
+          "name": "mode",
+          "required": true,
+          "type": "enum",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "draw_ellipse",
+      "description": "Draw a filled ellipse/circle (heads, eyes, balls, suns). Coordinates are layer units: the default 16:9 camera shows roughly x -1.78..1.78, y -1..1 (verify with document_screenshot). ry defaults to rx (circle). segments (4-64, default 8) controls smoothness.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the VECTOR layer to draw into"
+        },
+        {
+          "name": "cx",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "cy",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "rx",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "ry",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "rotation",
+          "required": false,
+          "type": "optional",
+          "description": "Radians"
+        },
+        {
+          "name": "segments",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fillColor",
+          "required": false,
+          "type": "optional",
+          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeColor",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeWidth",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke width in pixels"
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": "Shape name (helps later restyling)"
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": "Frame to create at (default 0)"
+        }
+      ]
+    },
+    {
+      "name": "draw_rect",
+      "description": "Draw a rectangle from its bottom-left corner (x, y) with width/height (floors, walls, signs, sky). Coordinates are layer units: the default 16:9 camera shows roughly x -1.78..1.78, y -1..1 (verify with document_screenshot).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the VECTOR layer to draw into"
+        },
+        {
+          "name": "x",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "width",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "height",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "fillColor",
+          "required": false,
+          "type": "optional",
+          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeColor",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeWidth",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke width in pixels"
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": "Shape name (helps later restyling)"
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": "Frame to create at (default 0)"
+        }
+      ]
+    },
+    {
+      "name": "draw_polygon",
+      "description": "Draw a closed polygon/blob through 3+ points (bodies, hair, hills, clothes). smooth > 0 (try 0.5-1) rounds the corners into organic curves. Coordinates are layer units: the default 16:9 camera shows roughly x -1.78..1.78, y -1..1 (verify with document_screenshot).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the VECTOR layer to draw into"
+        },
+        {
+          "name": "points",
+          "required": true,
+          "type": "array",
+          "description": ""
+        },
+        {
+          "name": "smooth",
+          "required": false,
+          "type": "optional",
+          "description": "Corner curvature: 0 = sharp, 1 = fully smooth"
+        },
+        {
+          "name": "filled",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fillColor",
+          "required": false,
+          "type": "optional",
+          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeColor",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeWidth",
+          "required": false,
+          "type": "optional",
+          "description": "Stroke width in pixels"
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": "Shape name (helps later restyling)"
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": "Frame to create at (default 0)"
+        }
+      ]
+    },
+    {
+      "name": "draw_polyline",
+      "description": "Draw an open stroke through 2+ points (mouths, eyebrows, whiskers, ground lines). strokeColor is required. Coordinates are layer units: the default 16:9 camera shows roughly x -1.78..1.78, y -1..1 (verify with document_screenshot).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Absolute ID of the VECTOR layer to draw into"
+        },
+        {
+          "name": "points",
+          "required": true,
+          "type": "array",
+          "description": ""
+        },
+        {
+          "name": "smooth",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "strokeColor",
+          "required": true,
+          "type": "string",
+          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+        },
+        {
+          "name": "strokeWidth",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "document_screenshot",
+      "description": "See your work. mode \"scene\" (default) renders the clean frame; \"full\" captures the whole Moho window (timeline, layers panel, bones). Take a screenshot after every significant change and compare it with what the user asked for.",
+      "params": [
+        {
+          "name": "mode",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "frame",
+          "required": false,
+          "type": "optional",
+          "description": "Frame to render (default: current)"
+        },
+        {
+          "name": "width",
+          "required": false,
+          "type": "optional",
+          "description": "Scene mode only"
+        },
+        {
+          "name": "height",
+          "required": false,
+          "type": "optional",
+          "description": "Scene mode only"
+        }
+      ]
+    },
+    {
+      "name": "input_mouseClick",
+      "description": "Click at window-relative (x, y). Use after document_screenshot(mode='full') to operate parts of Moho that have no API.",
+      "params": [
+        {
+          "name": "x",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "button",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "clickType",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "input_mouseDrag",
+      "description": "Drag from (startX, startY) to (endX, endY), window-relative.",
+      "params": [
+        {
+          "name": "startX",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "startY",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "endX",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "endY",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "button",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "steps",
+          "required": false,
+          "type": "optional",
+          "description": "Intermediate points (default 10)"
+        }
+      ]
+    },
+    {
+      "name": "input_sendKeys",
+      "description": "Send a shortcut to Moho, e.g. \"ctrl+z\", \"ctrl+shift+z\", \"space\", \"ctrl+s\", \"f5\".",
+      "params": [
+        {
+          "name": "keys",
+          "required": true,
+          "type": "string",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "batch_execute",
+      "description": "Run many Moho operations in ONE round-trip (~300 ms total instead of ~300 ms each). Use it whenever you have 2+ operations. Method names use DOT notation (\"bone.setTransform\", \"draw.ellipse\", \"layer.createLayer\"); params match the tool schemas. Not allowed inside a batch: document.screenshot, render.frames, project.new/open, system.selfTest, batch.execute. Returns per-operation results and a summary; use stopOnError when later operations depend on earlier ones.",
+      "params": [
+        {
+          "name": "operations",
+          "required": true,
+          "type": "array",
+          "description": ""
+        },
+        {
+          "name": "stopOnError",
+          "required": false,
+          "type": "default",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "rig_buildSkeleton",
+      "description": "Build a whole skeleton in one call from a list of named bones (parents must come before children). Creates the bone layer unless layerId is given. Returns bone name -> bone index, which the other rig_/anim_ tools and bone_setTransform use.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": false,
+          "type": "optional",
+          "description": "Existing bone layer; omitted = create a new one"
+        },
+        {
+          "name": "layerName",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "parentId",
+          "required": false,
+          "type": "optional",
+          "description": "Group to create the bone layer in"
+        },
+        {
+          "name": "bones",
+          "required": true,
+          "type": "array",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "rig_buildHumanoid",
+      "description": "Create a ready-made front-facing humanoid skeleton (hip, spine, neck, head, shoulders, arms, hands, legs, feet) named so anim_walkCycle / anim_wave work immediately. Character's left (_L) is on the screen's right. ALWAYS verify with document_screenshot(mode='full'); if bones are visibly mis-attached, restart Moho's bridge with MOHO_MCP_BONE_ORIGIN=tip.",
+      "params": [
+        {
+          "name": "layerName",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "parentId",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "scale",
+          "required": false,
+          "type": "optional",
+          "description": "1 = 1.3 units tall"
+        },
+        {
+          "name": "x",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "required": false,
+          "type": "optional",
+          "description": "World Y of the hip (default -0.05)"
+        }
+      ]
+    },
+    {
+      "name": "rig_attachLayers",
+      "description": "Attach artwork layers to bones. mode \"parent\" makes the whole layer follow one bone (rigid parts: head, hands, props). \"bind\" binds every point of a vector layer to one bone. \"flexi\" flexi-binds the layer to ALL bones (bendy limbs, torso). boneName refers to a bone in the given bone layer.",
+      "params": [
+        {
+          "name": "boneLayerId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "attachments",
+          "required": true,
+          "type": "array",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "rig_createSmartBone",
+      "description": "Create a smart-bone dial in one call: creates the action for a control bone, records the given poses inside it, then returns to the main timeline. Each pose is {frame, bones:[{boneId, angle?, posX?, posY?, scale?}]} recorded inside the action (e.g. head-turn left/right, mouth open). Frames are action-timeline frames.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Bone layer"
+        },
+        {
+          "name": "controlBoneId",
+          "required": true,
+          "type": "number",
+          "description": "The bone that becomes the dial"
+        },
+        {
+          "name": "poses",
+          "required": true,
+          "type": "array",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_walkCycle",
+      "description": "Animate a walk cycle on a humanoid rig (bones are found by name — rig_buildHumanoid names them correctly). Keys are placed so the cycle loops seamlessly; Moho smooths between them. Character faces +x (right).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Bone layer ID"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "cycles",
+          "required": false,
+          "type": "default",
+          "description": "Number of full cycles (2 steps each)"
+        },
+        {
+          "name": "frames",
+          "required": false,
+          "type": "optional",
+          "description": "Frames per cycle"
+        },
+        {
+          "name": "travel",
+          "required": false,
+          "type": "optional",
+          "description": "Hip X travel per cycle (0 = in place)"
+        },
+        {
+          "name": "intensity",
+          "required": false,
+          "type": "optional",
+          "description": "Multiplier on swing, bounce and lean (default 1)"
+        }
+      ]
+    },
+    {
+      "name": "anim_runCycle",
+      "description": "Animate a run cycle on a humanoid rig (bones are found by name — rig_buildHumanoid names them correctly). Keys are placed so the cycle loops seamlessly; Moho smooths between them. Character faces +x (right).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Bone layer ID"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "cycles",
+          "required": false,
+          "type": "default",
+          "description": "Number of full cycles (2 steps each)"
+        },
+        {
+          "name": "frames",
+          "required": false,
+          "type": "optional",
+          "description": "Frames per cycle"
+        },
+        {
+          "name": "travel",
+          "required": false,
+          "type": "optional",
+          "description": "Hip X travel per cycle (0 = in place)"
+        },
+        {
+          "name": "intensity",
+          "required": false,
+          "type": "optional",
+          "description": "Multiplier on swing, bounce and lean (default 1)"
+        }
+      ]
+    },
+    {
+      "name": "anim_wave",
+      "description": "Raise an arm, wave the forearm, lower it (greeting). Side L = character's left (screen right).",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Bone layer ID"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "side",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "duration",
+          "required": false,
+          "type": "default",
+          "description": "Total frames of the gesture"
+        },
+        {
+          "name": "swings",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "amplitude",
+          "required": false,
+          "type": "default",
+          "description": "Forearm swing in radians"
+        }
+      ]
+    },
+    {
+      "name": "anim_oscillate",
+      "description": "Sine-wave one bone property around its rest value: breathing (spine scale), nodding (head angle), tail wag, floating (posY), swinging pendulum. The loop returns to its start value.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": "Bone layer ID"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "boneId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "property",
+          "required": true,
+          "type": "enum",
+          "description": ""
+        },
+        {
+          "name": "amplitude",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "period",
+          "required": true,
+          "type": "number",
+          "description": "Frames per oscillation"
+        },
+        {
+          "name": "cycles",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "phase",
+          "required": false,
+          "type": "optional",
+          "description": "Radians"
+        }
+      ]
+    },
+    {
+      "name": "anim_blink",
+      "description": "Add natural, irregular blinking over a frame range. Either drive a SWITCH layer (switchLayerId + openChild + closedChild names) or squash eye layers vertically (eyeLayerIds). Pass `at` for exact frames; otherwise blinks are generated deterministically from `seed`.",
+      "params": [
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "default",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "at",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "interval",
+          "required": false,
+          "type": "optional",
+          "description": "Average frames between blinks (default 72)"
+        },
+        {
+          "name": "seed",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "closedFor",
+          "required": false,
+          "type": "optional",
+          "description": "Frames eyes stay closed (default 3)"
+        },
+        {
+          "name": "switchLayerId",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "openChild",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "closedChild",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "eyeLayerIds",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_lipSync",
+      "description": "Set mouth shapes over time on a switch layer. cues = [{frame, mouth}] where mouth is the child layer name (e.g. rest, AI, E, O, U, MBP, FV, L, etc.). Derive cue frames from the dialogue timing: frame = seconds * fps.",
+      "params": [
+        {
+          "name": "switchLayerId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "cues",
+          "required": true,
+          "type": "array",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_layerPath",
+      "description": "Move/rotate/scale a layer through keyframes in one call: keys = [{frame, x?, y?, rotation?, scale?}]. For props, whole characters sliding across the scene, bouncing balls, floating clouds.",
+      "params": [
+        {
+          "name": "layerId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "keys",
+          "required": true,
+          "type": "array",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_fade",
+      "description": "Fade layers in or out (opacity from -> to over a frame range). Use 0 -> 1 to fade in, 1 -> 0 to fade out.",
+      "params": [
+        {
+          "name": "layerIds",
+          "required": true,
+          "type": "array",
+          "description": ""
+        },
+        {
+          "name": "from",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "to",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "startFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_cameraMove",
+      "description": "Camera move between two poses: pan (x/y), push-in / pull-out (zoom), roll. Examples: push-in = zoom 1 -> 1.4; pan right = x 0 -> 1.",
+      "params": [
+        {
+          "name": "startFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "from",
+          "required": true,
+          "type": "object",
+          "description": ""
+        },
+        {
+          "name": "to",
+          "required": true,
+          "type": "object",
+          "description": ""
+        },
+        {
+          "name": "holdFrames",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_cameraShake",
+      "description": "Camera shake for impacts, explosions or handheld feel; returns to the base position at endFrame.",
+      "params": [
+        {
+          "name": "startFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "amplitude",
+          "required": true,
+          "type": "number",
+          "description": "Peak offset in layer units (0.02 subtle, 0.1 violent)"
+        },
+        {
+          "name": "interval",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "seed",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "base",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "render_exportVideo",
+      "description": "Render the open document to a video file (.mp4, .mov, .webm or .gif). Renders every frame through Moho into a temporary PNG sequence, then encodes with ffmpeg (optionally muxing an audio track). Long scenes take minutes and Moho's UI is busy meanwhile. Frames default to the document's start..end range.",
+      "params": [
+        {
+          "name": "outputPath",
+          "required": true,
+          "type": "string",
+          "description": "Absolute path of the video to write"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "endFrame",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        },
+        {
+          "name": "fps",
+          "required": false,
+          "type": "optional",
+          "description": "Default: the document's FPS"
+        },
+        {
+          "name": "audioPath",
+          "required": false,
+          "type": "optional",
+          "description": "Soundtrack to mux (wav/mp3/aac...)"
+        },
+        {
+          "name": "audioOffset",
+          "required": false,
+          "type": "optional",
+          "description": "Seconds: >0 skips into the audio, <0 delays it"
+        },
+        {
+          "name": "crf",
+          "required": false,
+          "type": "optional",
+          "description": "Quality: lower = better (default 18)"
+        },
+        {
+          "name": "keepFrames",
+          "required": false,
+          "type": "optional",
+          "description": "Keep the PNG sequence (default false)"
+        }
+      ]
+    },
+    {
+      "name": "render_concatVideos",
+      "description": "Join scene videos into one film, in the order given. Fast stream copy by default (all inputs must share codec, size and fps — true for videos from render_exportVideo with the same settings); set reencode=true to normalise mismatched inputs.",
+      "params": [
+        {
+          "name": "inputs",
+          "required": true,
+          "type": "array",
+          "description": "Absolute paths, in playback order"
+        },
+        {
+          "name": "outputPath",
+          "required": true,
+          "type": "string",
+          "description": ""
+        },
+        {
+          "name": "reencode",
+          "required": false,
+          "type": "optional",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "render_addAudio",
+      "description": "Add or replace the soundtrack of an existing video (video stream is copied, audio encoded as AAC).",
+      "params": [
+        {
+          "name": "videoPath",
+          "required": true,
+          "type": "string",
+          "description": ""
+        },
+        {
+          "name": "audioPath",
+          "required": true,
+          "type": "string",
+          "description": ""
+        },
+        {
+          "name": "outputPath",
+          "required": true,
+          "type": "string",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "render_checkEnvironment",
+      "description": "Verify ffmpeg is installed and reachable before a long export.",
+      "params": []
+    }
+  ]
+}
