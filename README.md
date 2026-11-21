@@ -65,7 +65,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 - **`system_selfTest`**: tự kiểm tra toàn bộ đường API trên đúng bản Moho của bạn.
 - **Sửa lỗi**: installer Windows/macOS gốc *không copy* `image/particle/switch.lua` (3 nhóm tool không chạy được); plugin có thể chạy cùng một request 2 lần nếu Moho vẽ lại trong lúc xử lý — đã thêm khoá chống re-entry.
 - **Bridge viết lại**: 56 khối try/catch giống hệt → bảng khai báo; batch tự chia lô (tối đa 200 thao tác/lô); test hợp đồng giữa bridge và danh sách cho phép của plugin.
-- **Kiểm thử**: 128 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
+- **Kiểm thử**: 129 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
 
 ## Giới hạn — nói thật
 
@@ -78,7 +78,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 ## Phát triển
 
 ```bash
-cd bridge && npm test            # 128 test TS (cần npm run build trước cho e2e)
+cd bridge && npm test            # 129 test TS (cần npm run build trước cho e2e)
 lua moho-plugin/tests/run_tests.lua   # test Lua (mock Moho)
 npm run docs                     # sinh lại docs/tool-reference.md
 ```

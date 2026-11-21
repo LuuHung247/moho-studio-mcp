@@ -15,7 +15,7 @@ const server = {
     const params = Object.entries(shape).map(([key, schema]) => ({
       name: key,
       required: !schema.isOptional(),
-      type: schema._def.typeName.replace("Zod", "").toLowerCase(),
+      type: schema.def.type === "optional" || schema.def.type === "default" ? schema.def.innerType.def.type : schema.def.type,
       description: schema.description ?? "",
     }));
     tools.push({ name, description, params });

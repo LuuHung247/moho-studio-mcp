@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 import type { MohoClient } from "../moho-client.js";
 import { passThroughSpecs, registerTools } from "../tools/index.js";
 import { toolNameFor } from "../tooling/define.js";
@@ -42,29 +43,29 @@ function luaMethodsIn(file: string, pattern: RegExp): string[] {
   return [...src.matchAll(pattern)].map((m) => m[1] as string);
 }
 
-/** Collect the path of every array schema without a max length. */
-function unboundedArrays(schema: any, where: string, out: string[] = []): string[] {
-  const def = schema?._def;
+/** Collect the path of every array schema without a max length (zod 4 internals). */
+export function unboundedArrays(schema: any, where: string, out: string[] = []): string[] {
+  const def = schema?.def;
   if (!def) return out;
-  switch (def.typeName) {
-    case "ZodArray":
-      if (def.maxLength === null || def.maxLength === undefined) out.push(where);
-      unboundedArrays(def.type, `${where}[]`, out);
+  switch (def.type) {
+    case "array": {
+      const bounded = (def.checks ?? []).some((c: any) => c._zod?.def?.check === "max_length" || c.check === "max_length");
+      if (!bounded) out.push(where);
+      unboundedArrays(def.element, `${where}[]`, out);
       break;
-    case "ZodObject":
-      for (const [k, v] of Object.entries(def.shape())) unboundedArrays(v, `${where}.${k}`, out);
+    }
+    case "object":
+      for (const [k, v] of Object.entries(def.shape)) unboundedArrays(v, `${where}.${k}`, out);
       break;
-    case "ZodOptional":
-    case "ZodNullable":
+    case "optional":
+    case "nullable":
+    case "default":
       unboundedArrays(def.innerType, where, out);
       break;
-    case "ZodDefault":
-      unboundedArrays(def.innerType, where, out);
-      break;
-    case "ZodUnion":
+    case "union":
       def.options.forEach((o: unknown, i: number) => unboundedArrays(o, `${where}|${i}`, out));
       break;
-    case "ZodRecord":
+    case "record":
       unboundedArrays(def.valueType, `${where}{}`, out);
       break;
   }
@@ -90,6 +91,14 @@ describe("tool registry", () => {
     for (const t of server.tools) {
       expect(t.description.length, t.name).toBeGreaterThan(10);
     }
+  });
+
+  it("the array-bound scanner really detects unbounded arrays (guards against a vacuous pass)", () => {
+    expect(unboundedArrays(z.array(z.number()), "a")).toEqual(["a"]);
+    expect(unboundedArrays(z.array(z.number()).max(3), "a")).toEqual([]);
+    expect(unboundedArrays(z.object({ x: z.array(z.string()).optional() }), "o")).toEqual(["o.x"]);
+    expect(unboundedArrays(z.object({ x: z.array(z.object({ y: z.array(z.number()).max(2) })).max(2) }), "o")).toEqual([]);
+    expect(unboundedArrays(z.object({ x: z.array(z.object({ y: z.array(z.number()) })).max(2) }), "o")).toEqual(["o.x[].y"]);
   });
 
   it("bounds every array parameter (zod memory-exhaustion advisory GHSA-mrhx-c7xc-m3w5)", () => {

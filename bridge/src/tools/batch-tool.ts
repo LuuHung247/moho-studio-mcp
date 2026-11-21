@@ -18,7 +18,7 @@ export function registerBatchTool(server: McpServer, client: MohoClient): void {
         .array(
           z.object({
             method: z.string().describe('e.g. "bone.setTransform"'),
-            params: z.record(z.unknown()).optional(),
+            params: z.record(z.string(), z.unknown()).optional(),
           }),
         )
         .min(1)

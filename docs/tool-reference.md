@@ -14,7 +14,7 @@ Run an end-to-end self test inside Moho (creates a temporary vector layer and bo
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `cleanup` | optional |  | Delete the temporary layers afterwards (default true) |
+| `cleanup` | boolean |  | Delete the temporary layers afterwards (default true) |
 
 ### `document_getInfo`
 
@@ -38,7 +38,7 @@ Save the document. Pass filePath to Save As; omit it to save in place.
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `filePath` | optional |  | Absolute path for Save As (.moho) |
+| `filePath` | string |  | Absolute path for Save As (.moho) |
 
 ### `document_undo`
 
@@ -55,13 +55,13 @@ Animate the document camera at a frame: 3D position (posX/posY/posZ), tilt/pan/r
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `frame` | number | yes | Frame number |
-| `posX` | optional |  | Camera X position |
-| `posY` | optional |  | Camera Y position |
-| `posZ` | optional |  | Camera Z position (dolly) |
-| `tilt` | optional |  | Tilt around X (radians) |
-| `pan` | optional |  | Pan around Y (radians) |
-| `roll` | optional |  | Roll around Z (radians) |
-| `zoom` | optional |  | Zoom; 1.0 = default field of view |
+| `posX` | number |  | Camera X position |
+| `posY` | number |  | Camera Y position |
+| `posZ` | number |  | Camera Z position (dolly) |
+| `tilt` | number |  | Tilt around X (radians) |
+| `pan` | number |  | Pan around Y (radians) |
+| `roll` | number |  | Roll around Z (radians) |
+| `zoom` | number |  | Zoom; 1.0 = default field of view |
 
 ### `render_frame`
 
@@ -70,7 +70,7 @@ Render one frame of the document to an image file (png recommended). Unlike docu
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `filePath` | string | yes | Absolute output path, e.g. D:\Phim\thumb.png |
-| `frame` | optional |  | Frame to render (default: current) |
+| `frame` | number |  | Frame to render (default: current) |
 
 ### `project_new`
 
@@ -78,12 +78,12 @@ Create a new empty document and optionally configure it. WARNING: replaces the a
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `width` | optional |  | Pixel width |
-| `height` | optional |  | Pixel height |
-| `fps` | optional |  | Frames per second |
-| `startFrame` | optional |  |  |
-| `endFrame` | optional |  | Last frame (length = endFrame - startFrame + 1) |
-| `backgroundColor` | optional |  | Background color as #RRGGBB or #RRGGBBAA |
+| `width` | number |  | Pixel width |
+| `height` | number |  | Pixel height |
+| `fps` | number |  | Frames per second |
+| `startFrame` | number |  |  |
+| `endFrame` | number |  | Last frame (length = endFrame - startFrame + 1) |
+| `backgroundColor` | string |  |  |
 
 ### `project_open`
 
@@ -99,12 +99,12 @@ Change settings of the open document: size, FPS, start/end frame, background col
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `width` | optional |  |  |
-| `height` | optional |  |  |
-| `fps` | optional |  |  |
-| `startFrame` | optional |  |  |
-| `endFrame` | optional |  |  |
-| `backgroundColor` | optional |  | Background color as #RRGGBB or #RRGGBBAA |
+| `width` | number |  |  |
+| `height` | number |  |  |
+| `fps` | number |  |  |
+| `startFrame` | number |  |  |
+| `endFrame` | number |  |  |
+| `backgroundColor` | string |  |  |
 
 ### `project_import`
 
@@ -113,8 +113,8 @@ Import a file as a new layer: image (PNG/JPG/PSD), vector (SVG, EPS/AI), audio (
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `filePath` | string | yes | Absolute path of the file to import |
-| `asImageSequence` | optional |  | Treat the path as the first image of a sequence (or a folder) |
-| `mode` | optional |  | Advanced: Moho FileImport mode (default 0) |
+| `asImageSequence` | boolean |  | Treat the path as the first image of a sequence (or a folder) |
+| `mode` | number |  | Advanced: Moho FileImport mode (default 0) |
 
 ### `document_screenshot`
 
@@ -122,10 +122,10 @@ See your work. mode "scene" (default) renders the clean frame; "full" captures t
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `mode` | optional |  |  |
-| `frame` | optional |  | Frame to render (default: current) |
-| `width` | optional |  | Scene mode only |
-| `height` | optional |  | Scene mode only |
+| `mode` | enum |  |  |
+| `frame` | number |  | Frame to render (default: current) |
+| `width` | number |  | Scene mode only |
+| `height` | number |  | Scene mode only |
 
 ### `render_exportVideo`
 
@@ -134,13 +134,13 @@ Render the open document to a video file (.mp4, .mov, .webm or .gif). Renders ev
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `outputPath` | string | yes | Absolute path of the video to write |
-| `startFrame` | optional |  |  |
-| `endFrame` | optional |  |  |
-| `fps` | optional |  | Default: the document's FPS |
-| `audioPath` | optional |  | Soundtrack to mux (wav/mp3/aac...) |
-| `audioOffset` | optional |  | Seconds: >0 skips into the audio, <0 delays it |
-| `crf` | optional |  | Quality: lower = better (default 18) |
-| `keepFrames` | optional |  | Keep the PNG sequence (default false) |
+| `startFrame` | number |  |  |
+| `endFrame` | number |  |  |
+| `fps` | number |  | Default: the document's FPS |
+| `audioPath` | string |  | Soundtrack to mux (wav/mp3/aac...) |
+| `audioOffset` | number |  | Seconds: >0 skips into the audio, <0 delays it |
+| `crf` | number |  | Quality: lower = better (default 18) |
+| `keepFrames` | boolean |  | Keep the PNG sequence (default false) |
 
 ### `render_concatVideos`
 
@@ -150,7 +150,7 @@ Join scene videos into one film, in the order given. Fast stream copy by default
 |---|---|---|---|
 | `inputs` | array | yes | Absolute paths, in playback order |
 | `outputPath` | string | yes |  |
-| `reencode` | optional |  |  |
+| `reencode` | boolean |  |  |
 
 ### `render_addAudio`
 
@@ -178,14 +178,14 @@ Draw a filled ellipse/circle (heads, eyes, balls, suns). Coordinates are layer u
 | `cx` | number | yes |  |
 | `cy` | number | yes |  |
 | `rx` | number | yes |  |
-| `ry` | optional |  |  |
-| `rotation` | optional |  | Radians |
-| `segments` | optional |  |  |
-| `fillColor` | optional |  | Fill color as #RRGGBB or #RRGGBBAA |
-| `strokeColor` | optional |  | Stroke color as #RRGGBB or #RRGGBBAA |
-| `strokeWidth` | optional |  | Stroke width in pixels |
-| `name` | optional |  | Shape name (helps later restyling) |
-| `frame` | optional |  | Frame to create at (default 0) |
+| `ry` | number |  |  |
+| `rotation` | number |  | Radians |
+| `segments` | number |  |  |
+| `fillColor` | string |  |  |
+| `strokeColor` | string |  |  |
+| `strokeWidth` | number |  | Stroke width in pixels |
+| `name` | string |  | Shape name (helps later restyling) |
+| `frame` | number |  | Frame to create at (default 0) |
 
 ### `draw_rect`
 
@@ -198,11 +198,11 @@ Draw a rectangle from its bottom-left corner (x, y) with width/height (floors, w
 | `y` | number | yes |  |
 | `width` | number | yes |  |
 | `height` | number | yes |  |
-| `fillColor` | optional |  | Fill color as #RRGGBB or #RRGGBBAA |
-| `strokeColor` | optional |  | Stroke color as #RRGGBB or #RRGGBBAA |
-| `strokeWidth` | optional |  | Stroke width in pixels |
-| `name` | optional |  | Shape name (helps later restyling) |
-| `frame` | optional |  | Frame to create at (default 0) |
+| `fillColor` | string |  |  |
+| `strokeColor` | string |  |  |
+| `strokeWidth` | number |  | Stroke width in pixels |
+| `name` | string |  | Shape name (helps later restyling) |
+| `frame` | number |  | Frame to create at (default 0) |
 
 ### `draw_polygon`
 
@@ -212,13 +212,13 @@ Draw a closed polygon/blob through 3+ points (bodies, hair, hills, clothes). smo
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the VECTOR layer to draw into |
 | `points` | array | yes |  |
-| `smooth` | optional |  | Corner curvature: 0 = sharp, 1 = fully smooth |
-| `filled` | optional |  |  |
-| `fillColor` | optional |  | Fill color as #RRGGBB or #RRGGBBAA |
-| `strokeColor` | optional |  | Stroke color as #RRGGBB or #RRGGBBAA |
-| `strokeWidth` | optional |  | Stroke width in pixels |
-| `name` | optional |  | Shape name (helps later restyling) |
-| `frame` | optional |  | Frame to create at (default 0) |
+| `smooth` | number |  | Corner curvature: 0 = sharp, 1 = fully smooth |
+| `filled` | boolean |  |  |
+| `fillColor` | string |  |  |
+| `strokeColor` | string |  |  |
+| `strokeWidth` | number |  | Stroke width in pixels |
+| `name` | string |  | Shape name (helps later restyling) |
+| `frame` | number |  | Frame to create at (default 0) |
 
 ### `draw_polyline`
 
@@ -228,11 +228,11 @@ Draw an open stroke through 2+ points (mouths, eyebrows, whiskers, ground lines)
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the VECTOR layer to draw into |
 | `points` | array | yes |  |
-| `smooth` | optional |  |  |
+| `smooth` | number |  |  |
 | `strokeColor` | string | yes | Stroke color as #RRGGBB or #RRGGBBAA |
-| `strokeWidth` | optional |  |  |
-| `name` | optional |  |  |
-| `frame` | optional |  |  |
+| `strokeWidth` | number |  |  |
+| `name` | string |  |  |
+| `frame` | number |  |  |
 
 ## Layers & scene
 
@@ -267,8 +267,8 @@ Create a layer. If parentId (a group) is given, the new layer is created inside 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `type` | enum | yes | Layer type |
-| `name` | optional |  | Layer name |
-| `parentId` | optional |  | Absolute ID of a group to create the layer in (default: document root) |
+| `name` | string |  | Layer name |
+| `parentId` | number |  | Absolute ID of a group to create the layer in (default: document root) |
 
 ### `layer_deleteLayer`
 
@@ -285,7 +285,7 @@ Duplicate a layer (and its children); the copy is placed above the original. Use
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
-| `name` | optional |  | Name for the copy |
+| `name` | string |  | Name for the copy |
 
 ### `layer_setName`
 
@@ -331,13 +331,13 @@ Set a layer's translation / rotation (radians) / scale at a frame. Only supplied
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `frame` | number | yes | Frame number |
-| `transX` | optional |  |  |
-| `transY` | optional |  |  |
-| `transZ` | optional |  |  |
-| `rotation` | optional |  | Z rotation in radians |
-| `scaleX` | optional |  |  |
-| `scaleY` | optional |  |  |
-| `scaleZ` | optional |  |  |
+| `transX` | number |  |  |
+| `transY` | number |  |  |
+| `transZ` | number |  |  |
+| `rotation` | number |  | Z rotation in radians |
+| `scaleX` | number |  |  |
+| `scaleY` | number |  |  |
+| `scaleZ` | number |  |  |
 
 ### `layer_setParentBone`
 
@@ -356,7 +356,7 @@ Move a layer into a group. top=true places it at the top of the stack.
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `parentGroupId` | number | yes | Absolute ID of the destination group |
-| `top` | optional |  |  |
+| `top` | boolean |  |  |
 
 ### `layer_placeBehind`
 
@@ -374,7 +374,7 @@ Switch into editing a named action (e.g. a smart-bone dial). Keyframes set while
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
-| `actionName` | optional |  |  |
+| `actionName` | string |  |  |
 
 ### `layer_listActions`
 
@@ -402,11 +402,11 @@ Animate a layer's drop shadow. All fields optional; enabled toggles it.
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `frame` | number | yes | Frame number |
-| `enabled` | optional |  |  |
-| `offset` | optional |  |  |
-| `blur` | optional |  |  |
-| `angle` | optional |  | Direction in radians |
-| `color` | optional |  | Shadow color as #RRGGBB or #RRGGBBAA |
+| `enabled` | boolean |  |  |
+| `offset` | number |  |  |
+| `blur` | number |  |  |
+| `angle` | number |  | Direction in radians |
+| `color` | string |  |  |
 
 ### `layer_setOutline`
 
@@ -416,9 +416,9 @@ Animate a layer's outline. All fields optional; enabled toggles it.
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `frame` | number | yes | Frame number |
-| `enabled` | optional |  |  |
-| `width` | optional |  |  |
-| `color` | optional |  | Outline color as #RRGGBB or #RRGGBBAA |
+| `enabled` | boolean |  |  |
+| `width` | number |  |  |
+| `color` | string |  |  |
 
 ### `switch_setActive`
 
@@ -428,8 +428,8 @@ Choose which child of a switch layer is visible from a frame onward. Use switch 
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the switch layer |
 | `frame` | number | yes | Frame number |
-| `childName` | optional |  |  |
-| `childIndex` | optional |  |  |
+| `childName` | string |  |  |
+| `childIndex` | number |  |  |
 
 ### `switch_getActive`
 
@@ -438,7 +438,7 @@ Read which child of a switch layer is visible at a frame.
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
-| `frame` | optional |  |  |
+| `frame` | number |  |  |
 
 ### `image_setSource`
 
@@ -464,25 +464,25 @@ Configure a particle layer (rain, snow, sparks, smoke). All settings optional; F
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
-| `numParticles` | optional |  |  |
-| `displayNumParticles` | optional |  |  |
-| `lifetime` | optional |  | Particle lifetime in frames |
-| `velocity` | optional |  |  |
-| `velocitySpread` | optional |  |  |
-| `directionAngle` | optional |  | Radians |
-| `directionSpread` | optional |  | Radians |
-| `accelerationAngle` | optional |  | Radians, e.g. -PI/2 for gravity |
-| `accelerationRate` | optional |  |  |
-| `damping` | optional |  |  |
-| `evenlySpaced` | optional |  |  |
-| `orientation` | optional |  |  |
-| `freeFloating` | optional |  |  |
-| `fullSpeedStart` | optional |  |  |
-| `randomStartTime` | optional |  |  |
-| `sourceWidth` | optional |  |  |
-| `sourceHeight` | optional |  |  |
-| `sourceDepth` | optional |  |  |
-| `randomSeed` | optional |  |  |
+| `numParticles` | number |  |  |
+| `displayNumParticles` | number |  |  |
+| `lifetime` | number |  | Particle lifetime in frames |
+| `velocity` | number |  |  |
+| `velocitySpread` | number |  |  |
+| `directionAngle` | number |  | Radians |
+| `directionSpread` | number |  | Radians |
+| `accelerationAngle` | number |  | Radians, e.g. -PI/2 for gravity |
+| `accelerationRate` | number |  |  |
+| `damping` | number |  |  |
+| `evenlySpaced` | boolean |  |  |
+| `orientation` | boolean |  |  |
+| `freeFloating` | boolean |  |  |
+| `fullSpeedStart` | boolean |  |  |
+| `randomStartTime` | boolean |  |  |
+| `sourceWidth` | number |  |  |
+| `sourceHeight` | number |  |  |
+| `sourceDepth` | number |  |  |
+| `randomSeed` | number |  |  |
 
 ## Rigging
 
@@ -502,13 +502,13 @@ Add a bone to a bone layer. Rest-pose fields are optional. Returns boneId (= ind
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the bone layer |
-| `name` | optional |  |  |
-| `posX` | optional |  |  |
-| `posY` | optional |  |  |
-| `angle` | optional |  | Radians |
-| `length` | optional |  |  |
-| `scale` | optional |  |  |
-| `parentBoneId` | optional |  | Parent bone index, -1 = none |
+| `name` | string |  |  |
+| `posX` | number |  |  |
+| `posY` | number |  |  |
+| `angle` | number |  | Radians |
+| `length` | number |  |  |
+| `scale` | number |  |  |
+| `parentBoneId` | number |  | Parent bone index, -1 = none |
 
 ### `bone_deleteBone`
 
@@ -518,7 +518,7 @@ Delete a bone. recursive=true also deletes descendants; otherwise children are r
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `boneId` | number | yes |  |
-| `recursive` | optional |  |  |
+| `recursive` | boolean |  |  |
 
 ### `bone_setRestPose`
 
@@ -528,13 +528,13 @@ Edit a bone's setup (rest) pose: position, angle, length, scale, parent, name. U
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `boneId` | number | yes |  |
-| `name` | optional |  |  |
-| `posX` | optional |  |  |
-| `posY` | optional |  |  |
-| `angle` | optional |  |  |
-| `length` | optional |  |  |
-| `scale` | optional |  |  |
-| `parentBoneId` | optional |  |  |
+| `name` | string |  |  |
+| `posX` | number |  |  |
+| `posY` | number |  |  |
+| `angle` | number |  |  |
+| `length` | number |  |  |
+| `scale` | number |  |  |
+| `parentBoneId` | number |  |  |
 
 ### `bone_setTransform`
 
@@ -545,10 +545,10 @@ Pose a bone at a frame (creates keyframes): angle (radians), posX/posY, scale. O
 | `layerId` | number | yes | Absolute ID of the layer |
 | `boneId` | number | yes |  |
 | `frame` | number | yes | Frame number |
-| `angle` | optional |  |  |
-| `posX` | optional |  |  |
-| `posY` | optional |  |  |
-| `scale` | optional |  |  |
+| `angle` | number |  |  |
+| `posX` | number |  |  |
+| `posY` | number |  |  |
+| `scale` | number |  |  |
 
 ### `bone_selectBone`
 
@@ -567,7 +567,7 @@ Create a smart-bone action named after the bone. Then call layer_activateAction 
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `boneId` | number | yes |  |
-| `frame` | optional |  |  |
+| `frame` | number |  |  |
 
 ### `rig_buildSkeleton`
 
@@ -575,9 +575,9 @@ Build a whole skeleton in one call from a list of named bones (parents must come
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `layerId` | optional |  | Existing bone layer; omitted = create a new one |
-| `layerName` | optional |  |  |
-| `parentId` | optional |  | Group to create the bone layer in |
+| `layerId` | number |  | Existing bone layer; omitted = create a new one |
+| `layerName` | string |  |  |
+| `parentId` | number |  | Group to create the bone layer in |
 | `bones` | array | yes |  |
 
 ### `rig_buildHumanoid`
@@ -586,11 +586,11 @@ Create a ready-made front-facing humanoid skeleton (hip, spine, neck, head, shou
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `layerName` | optional |  |  |
-| `parentId` | optional |  |  |
-| `scale` | optional |  | 1 = 1.3 units tall |
-| `x` | optional |  |  |
-| `y` | optional |  | World Y of the hip (default -0.05) |
+| `layerName` | string |  |  |
+| `parentId` | number |  |  |
+| `scale` | number |  | 1 = 1.3 units tall |
+| `x` | number |  |  |
+| `y` | number |  | World Y of the hip (default -0.05) |
 
 ### `rig_attachLayers`
 
@@ -646,9 +646,9 @@ Low-level: add a point at (x, y). With connectToPointId it attaches to that poin
 | `layerId` | number | yes | Absolute ID of the layer |
 | `x` | number | yes |  |
 | `y` | number | yes |  |
-| `frame` | optional |  |  |
-| `connectToPointId` | optional |  |  |
-| `startNewCurve` | optional |  |  |
+| `frame` | number |  |  |
+| `connectToPointId` | number |  |  |
+| `startNewCurve` | boolean |  |  |
 
 ### `mesh_createShape`
 
@@ -658,12 +658,12 @@ Low-level: create a fill/stroke shape from point indices (a closed loop for a fi
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `pointIndices` | array | yes |  |
-| `filled` | optional |  |  |
-| `frame` | optional |  |  |
-| `name` | optional |  |  |
-| `fillColor` | optional |  | Fill color as #RRGGBB or #RRGGBBAA |
-| `strokeColor` | optional |  | Stroke color as #RRGGBB or #RRGGBBAA |
-| `strokeWidth` | optional |  |  |
+| `filled` | boolean |  |  |
+| `frame` | number |  |  |
+| `name` | string |  |  |
+| `fillColor` | string |  |  |
+| `strokeColor` | string |  |  |
+| `strokeWidth` | number |  |  |
 
 ### `mesh_setPointCurvature`
 
@@ -674,7 +674,7 @@ Smooth (≈1) or sharpen (0) a vertex. Makes shapes look hand-drawn instead of p
 | `layerId` | number | yes | Absolute ID of the layer |
 | `pointIndex` | number | yes |  |
 | `curvature` | number | yes |  |
-| `frame` | optional |  |  |
+| `frame` | number |  |  |
 
 ### `mesh_setBezierHandle`
 
@@ -687,9 +687,9 @@ Set one bezier control handle on a curve point (curve-local index — see mesh_g
 | `curvePointIndex` | number | yes |  |
 | `x` | number | yes |  |
 | `y` | number | yes |  |
-| `frame` | optional |  |  |
-| `prePoint` | optional |  |  |
-| `syncAngles` | optional |  |  |
+| `frame` | number |  |  |
+| `prePoint` | boolean |  |  |
+| `syncAngles` | boolean |  |  |
 
 ### `mesh_bindPoints`
 
@@ -709,13 +709,13 @@ Restyle an existing shape: fill/stroke color (animatable via frame), stroke widt
 |---|---|---|---|
 | `layerId` | number | yes | Absolute ID of the layer |
 | `shapeIndex` | number | yes |  |
-| `frame` | optional |  |  |
-| `name` | optional |  |  |
-| `fillColor` | optional |  | Fill color as #RRGGBB or #RRGGBBAA |
-| `strokeColor` | optional |  | Stroke color as #RRGGBB or #RRGGBBAA |
-| `strokeWidth` | optional |  |  |
-| `hasFill` | optional |  |  |
-| `hasOutline` | optional |  |  |
+| `frame` | number |  |  |
+| `name` | string |  |  |
+| `fillColor` | string |  |  |
+| `strokeColor` | string |  |  |
+| `strokeWidth` | number |  |  |
+| `hasFill` | boolean |  |  |
+| `hasOutline` | boolean |  |  |
 
 ## Animation
 
@@ -776,11 +776,11 @@ Animate a walk cycle on a humanoid rig (bones are found by name — rig_buildHum
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Bone layer ID |
-| `startFrame` | default |  |  |
-| `cycles` | default |  | Number of full cycles (2 steps each) |
-| `frames` | optional |  | Frames per cycle |
-| `travel` | optional |  | Hip X travel per cycle (0 = in place) |
-| `intensity` | optional |  | Multiplier on swing, bounce and lean (default 1) |
+| `startFrame` | number |  |  |
+| `cycles` | number |  | Number of full cycles (2 steps each) |
+| `frames` | number |  | Frames per cycle |
+| `travel` | number |  | Hip X travel per cycle (0 = in place) |
+| `intensity` | number |  | Multiplier on swing, bounce and lean (default 1) |
 
 ### `anim_runCycle`
 
@@ -789,11 +789,11 @@ Animate a run cycle on a humanoid rig (bones are found by name — rig_buildHuma
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Bone layer ID |
-| `startFrame` | default |  |  |
-| `cycles` | default |  | Number of full cycles (2 steps each) |
-| `frames` | optional |  | Frames per cycle |
-| `travel` | optional |  | Hip X travel per cycle (0 = in place) |
-| `intensity` | optional |  | Multiplier on swing, bounce and lean (default 1) |
+| `startFrame` | number |  |  |
+| `cycles` | number |  | Number of full cycles (2 steps each) |
+| `frames` | number |  | Frames per cycle |
+| `travel` | number |  | Hip X travel per cycle (0 = in place) |
+| `intensity` | number |  | Multiplier on swing, bounce and lean (default 1) |
 
 ### `anim_wave`
 
@@ -802,11 +802,11 @@ Raise an arm, wave the forearm, lower it (greeting). Side L = character's left (
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Bone layer ID |
-| `startFrame` | default |  |  |
-| `side` | default |  |  |
-| `duration` | default |  | Total frames of the gesture |
-| `swings` | default |  |  |
-| `amplitude` | default |  | Forearm swing in radians |
+| `startFrame` | number |  |  |
+| `side` | enum |  |  |
+| `duration` | number |  | Total frames of the gesture |
+| `swings` | number |  |  |
+| `amplitude` | number |  | Forearm swing in radians |
 
 ### `anim_oscillate`
 
@@ -815,13 +815,13 @@ Sine-wave one bone property around its rest value: breathing (spine scale), nodd
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Bone layer ID |
-| `startFrame` | default |  |  |
+| `startFrame` | number |  |  |
 | `boneId` | number | yes |  |
 | `property` | enum | yes |  |
 | `amplitude` | number | yes |  |
 | `period` | number | yes | Frames per oscillation |
-| `cycles` | default |  |  |
-| `phase` | optional |  | Radians |
+| `cycles` | number |  |  |
+| `phase` | number |  | Radians |
 
 ### `anim_blink`
 
@@ -829,16 +829,16 @@ Add natural, irregular blinking over a frame range. Either drive a SWITCH layer 
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `startFrame` | default |  |  |
+| `startFrame` | number |  |  |
 | `endFrame` | number | yes |  |
-| `at` | optional |  |  |
-| `interval` | optional |  | Average frames between blinks (default 72) |
-| `seed` | optional |  |  |
-| `closedFor` | optional |  | Frames eyes stay closed (default 3) |
-| `switchLayerId` | optional |  |  |
-| `openChild` | optional |  |  |
-| `closedChild` | optional |  |  |
-| `eyeLayerIds` | optional |  |  |
+| `at` | array |  |  |
+| `interval` | number |  | Average frames between blinks (default 72) |
+| `seed` | number |  |  |
+| `closedFor` | number |  | Frames eyes stay closed (default 3) |
+| `switchLayerId` | number |  |  |
+| `openChild` | string |  |  |
+| `closedChild` | string |  |  |
+| `eyeLayerIds` | array |  |  |
 
 ### `anim_lipSync`
 
@@ -880,7 +880,7 @@ Camera move between two poses: pan (x/y), push-in / pull-out (zoom), roll. Examp
 | `endFrame` | number | yes |  |
 | `from` | object | yes |  |
 | `to` | object | yes |  |
-| `holdFrames` | optional |  |  |
+| `holdFrames` | number |  |  |
 
 ### `anim_cameraShake`
 
@@ -891,9 +891,9 @@ Camera shake for impacts, explosions or handheld feel; returns to the base posit
 | `startFrame` | number | yes |  |
 | `endFrame` | number | yes |  |
 | `amplitude` | number | yes | Peak offset in layer units (0.02 subtle, 0.1 violent) |
-| `interval` | optional |  |  |
-| `seed` | optional |  |  |
-| `base` | optional |  |  |
+| `interval` | number |  |  |
+| `seed` | number |  |  |
+| `base` | object |  |  |
 
 ## Interaction
 
@@ -905,8 +905,8 @@ Click at window-relative (x, y). Use after document_screenshot(mode='full') to o
 |---|---|---|---|
 | `x` | number | yes |  |
 | `y` | number | yes |  |
-| `button` | optional |  |  |
-| `clickType` | optional |  |  |
+| `button` | enum |  |  |
+| `clickType` | enum |  |  |
 
 ### `input_mouseDrag`
 
@@ -918,8 +918,8 @@ Drag from (startX, startY) to (endX, endY), window-relative.
 | `startY` | number | yes |  |
 | `endX` | number | yes |  |
 | `endY` | number | yes |  |
-| `button` | optional |  |  |
-| `steps` | optional |  | Intermediate points (default 10) |
+| `button` | enum |  |  |
+| `steps` | number |  | Intermediate points (default 10) |
 
 ### `input_sendKeys`
 
@@ -936,4 +936,4 @@ Run many Moho operations in ONE round-trip (~300 ms total instead of ~300 ms eac
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `operations` | array | yes |  |
-| `stopOnError` | default |  |  |
+| `stopOnError` | optional |  |  |

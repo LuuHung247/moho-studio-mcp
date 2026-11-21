@@ -4,14 +4,14 @@
 
 Đã kiểm tra / vá (lần quét 21/11/2026):
 - Không có secret/khoá nào trong mã nguồn; bridge không mở cổng mạng (stdio + file IPC).
-- `@modelcontextprotocol/sdk` nâng lên 1.32.2 (vá 2 lỗi cao).
+- `@modelcontextprotocol/sdk` 1.32.2 (bản mới nhất, vá 2 lỗi cao), zod 4.6.7, vitest mới nhất.
 - Lệnh shell trong plugin Lua ghép từ đường dẫn: `util.ensureDir` từ chối `" % & | < > ^ ` $ ; !` và ký tự điều khiển.
 - ffmpeg chạy bằng mảng tham số (không qua shell); đường dẫn phải tuyệt đối, cục bộ, không có `http://`, `concat:`, `pipe:`, `-`…, không có xuống dòng (chặn tiêm chỉ thị vào file concat).
 - `input_*`: toạ độ phải hữu hạn trong ±20000, `steps` ≤ 200, phím chỉ trong bảng VK cho phép (không ghép chuỗi tuỳ ý vào PowerShell).
 - Request IPC bị xoá trước khi xử lý và có khoá chống chạy lồng nhau.
 
 Còn lại (chấp nhận, nên biết):
-- `zod@3` advisory DoS bộ nhớ (GHSA-mrhx-c7xc-m3w5) chỉ khai thác được qua mảng không giới hạn độ dài. Đã đặt `.max()` cho mọi mảng tham số (hằng số `LIMITS` trong `bridge/src/tools/schema.ts`) và `registry.test.ts` sẽ fail nếu có mảng nào thiếu giới hạn. `npm audit` vẫn báo zod vì chỉ báo theo số phiên bản; nâng lên zod 4 chờ SDK hỗ trợ.
+- Đã nâng lên `zod@4.6.7` (vá GHSA-mrhx-c7xc-m3w5), đồng thời vẫn giữ giới hạn `.max()` cho mọi mảng tham số (`LIMITS` trong `bridge/src/tools/schema.ts`; `registry.test.ts` fail nếu thiếu). `npm audit`: 0 lỗ hổng.
 - Thư mục IPC nằm trong `%TEMP%` của user (Windows: chỉ user đó truy cập). Trên macOS/Linux `/tmp` dùng chung — đặt `MOHO_MCP_IPC_DIR` vào thư mục riêng 0700.
 - `keep-alive.ps1` chạy với `-ExecutionPolicy Bypass` từ `%TEMP%`; tiến trình cùng user vốn đã có quyền tương đương.
 - Plugin Lua cài vào Program Files phải chạy `install-plugin.bat` bằng Administrator.

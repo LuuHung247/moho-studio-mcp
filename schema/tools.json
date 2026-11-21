@@ -13,7 +13,7 @@
         {
           "name": "cleanup",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": "Delete the temporary layers afterwards (default true)"
         }
       ]
@@ -47,7 +47,7 @@
         {
           "name": "filePath",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Absolute path for Save As (.moho)"
         }
       ]
@@ -75,43 +75,43 @@
         {
           "name": "posX",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Camera X position"
         },
         {
           "name": "posY",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Camera Y position"
         },
         {
           "name": "posZ",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Camera Z position (dolly)"
         },
         {
           "name": "tilt",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Tilt around X (radians)"
         },
         {
           "name": "pan",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Pan around Y (radians)"
         },
         {
           "name": "roll",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Roll around Z (radians)"
         },
         {
           "name": "zoom",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Zoom; 1.0 = default field of view"
         }
       ]
@@ -129,7 +129,7 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frame to render (default: current)"
         }
       ]
@@ -141,38 +141,38 @@
         {
           "name": "width",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Pixel width"
         },
         {
           "name": "height",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Pixel height"
         },
         {
           "name": "fps",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frames per second"
         },
         {
           "name": "startFrame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "endFrame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Last frame (length = endFrame - startFrame + 1)"
         },
         {
           "name": "backgroundColor",
           "required": false,
-          "type": "optional",
-          "description": "Background color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         }
       ]
     },
@@ -195,38 +195,38 @@
         {
           "name": "width",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "height",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "fps",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "startFrame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "endFrame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "backgroundColor",
           "required": false,
-          "type": "optional",
-          "description": "Background color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         }
       ]
     },
@@ -243,13 +243,13 @@
         {
           "name": "asImageSequence",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": "Treat the path as the first image of a sequence (or a folder)"
         },
         {
           "name": "mode",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Advanced: Moho FileImport mode (default 0)"
         }
       ]
@@ -303,13 +303,13 @@
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Layer name"
         },
         {
           "name": "parentId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Absolute ID of a group to create the layer in (default: document root)"
         }
       ]
@@ -339,7 +339,7 @@
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Name for the copy"
         }
       ]
@@ -435,43 +435,43 @@
         {
           "name": "transX",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "transY",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "transZ",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "rotation",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Z rotation in radians"
         },
         {
           "name": "scaleX",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "scaleY",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "scaleZ",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -513,7 +513,7 @@
         {
           "name": "top",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         }
       ]
@@ -549,7 +549,7 @@
         {
           "name": "actionName",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         }
       ]
@@ -609,32 +609,32 @@
         {
           "name": "enabled",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "offset",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "blur",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "angle",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Direction in radians"
         },
         {
           "name": "color",
           "required": false,
-          "type": "optional",
-          "description": "Shadow color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         }
       ]
     },
@@ -657,20 +657,20 @@
         {
           "name": "enabled",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "width",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "color",
           "required": false,
-          "type": "optional",
-          "description": "Outline color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         }
       ]
     },
@@ -693,13 +693,13 @@
         {
           "name": "childName",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "childIndex",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -717,7 +717,7 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -765,115 +765,115 @@
         {
           "name": "numParticles",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "displayNumParticles",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "lifetime",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Particle lifetime in frames"
         },
         {
           "name": "velocity",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "velocitySpread",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "directionAngle",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Radians"
         },
         {
           "name": "directionSpread",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Radians"
         },
         {
           "name": "accelerationAngle",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Radians, e.g. -PI/2 for gravity"
         },
         {
           "name": "accelerationRate",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "damping",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "evenlySpaced",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "orientation",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "freeFloating",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "fullSpeedStart",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "randomStartTime",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "sourceWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "sourceHeight",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "sourceDepth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "randomSeed",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -909,43 +909,43 @@
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "posX",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "posY",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "angle",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Radians"
         },
         {
           "name": "length",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "scale",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "parentBoneId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Parent bone index, -1 = none"
         }
       ]
@@ -969,7 +969,7 @@
         {
           "name": "recursive",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         }
       ]
@@ -993,43 +993,43 @@
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "posX",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "posY",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "angle",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "length",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "scale",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "parentBoneId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -1059,25 +1059,25 @@
         {
           "name": "angle",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "posX",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "posY",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "scale",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -1119,7 +1119,7 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -1185,19 +1185,19 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "connectToPointId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "startNewCurve",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         }
       ]
@@ -1221,37 +1221,37 @@
         {
           "name": "filled",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "fillColor",
           "required": false,
-          "type": "optional",
-          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeColor",
           "required": false,
-          "type": "optional",
-          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -1281,7 +1281,7 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -1323,19 +1323,19 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "prePoint",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "syncAngles",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         }
       ]
@@ -1383,43 +1383,43 @@
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "fillColor",
           "required": false,
-          "type": "optional",
-          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeColor",
           "required": false,
-          "type": "optional",
-          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "hasFill",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "hasOutline",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         }
       ]
@@ -1575,49 +1575,49 @@
         {
           "name": "ry",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "rotation",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Radians"
         },
         {
           "name": "segments",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "fillColor",
           "required": false,
-          "type": "optional",
-          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeColor",
           "required": false,
-          "type": "optional",
-          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Stroke width in pixels"
         },
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Shape name (helps later restyling)"
         },
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frame to create at (default 0)"
         }
       ]
@@ -1659,31 +1659,31 @@
         {
           "name": "fillColor",
           "required": false,
-          "type": "optional",
-          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeColor",
           "required": false,
-          "type": "optional",
-          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Stroke width in pixels"
         },
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Shape name (helps later restyling)"
         },
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frame to create at (default 0)"
         }
       ]
@@ -1707,43 +1707,43 @@
         {
           "name": "smooth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Corner curvature: 0 = sharp, 1 = fully smooth"
         },
         {
           "name": "filled",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         },
         {
           "name": "fillColor",
           "required": false,
-          "type": "optional",
-          "description": "Fill color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeColor",
           "required": false,
-          "type": "optional",
-          "description": "Stroke color as #RRGGBB or #RRGGBBAA"
+          "type": "string",
+          "description": ""
         },
         {
           "name": "strokeWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Stroke width in pixels"
         },
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Shape name (helps later restyling)"
         },
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frame to create at (default 0)"
         }
       ]
@@ -1767,7 +1767,7 @@
         {
           "name": "smooth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
@@ -1779,19 +1779,19 @@
         {
           "name": "strokeWidth",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "name",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -1803,25 +1803,25 @@
         {
           "name": "mode",
           "required": false,
-          "type": "optional",
+          "type": "enum",
           "description": ""
         },
         {
           "name": "frame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frame to render (default: current)"
         },
         {
           "name": "width",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Scene mode only"
         },
         {
           "name": "height",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Scene mode only"
         }
       ]
@@ -1845,13 +1845,13 @@
         {
           "name": "button",
           "required": false,
-          "type": "optional",
+          "type": "enum",
           "description": ""
         },
         {
           "name": "clickType",
           "required": false,
-          "type": "optional",
+          "type": "enum",
           "description": ""
         }
       ]
@@ -1887,13 +1887,13 @@
         {
           "name": "button",
           "required": false,
-          "type": "optional",
+          "type": "enum",
           "description": ""
         },
         {
           "name": "steps",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Intermediate points (default 10)"
         }
       ]
@@ -1923,7 +1923,7 @@
         {
           "name": "stopOnError",
           "required": false,
-          "type": "default",
+          "type": "optional",
           "description": ""
         }
       ]
@@ -1935,19 +1935,19 @@
         {
           "name": "layerId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Existing bone layer; omitted = create a new one"
         },
         {
           "name": "layerName",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "parentId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Group to create the bone layer in"
         },
         {
@@ -1965,31 +1965,31 @@
         {
           "name": "layerName",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "parentId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "scale",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "1 = 1.3 units tall"
         },
         {
           "name": "x",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "y",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "World Y of the hip (default -0.05)"
         }
       ]
@@ -2049,31 +2049,31 @@
         {
           "name": "startFrame",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
           "name": "cycles",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": "Number of full cycles (2 steps each)"
         },
         {
           "name": "frames",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frames per cycle"
         },
         {
           "name": "travel",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Hip X travel per cycle (0 = in place)"
         },
         {
           "name": "intensity",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Multiplier on swing, bounce and lean (default 1)"
         }
       ]
@@ -2091,31 +2091,31 @@
         {
           "name": "startFrame",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
           "name": "cycles",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": "Number of full cycles (2 steps each)"
         },
         {
           "name": "frames",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frames per cycle"
         },
         {
           "name": "travel",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Hip X travel per cycle (0 = in place)"
         },
         {
           "name": "intensity",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Multiplier on swing, bounce and lean (default 1)"
         }
       ]
@@ -2133,31 +2133,31 @@
         {
           "name": "startFrame",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
           "name": "side",
           "required": false,
-          "type": "default",
+          "type": "enum",
           "description": ""
         },
         {
           "name": "duration",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": "Total frames of the gesture"
         },
         {
           "name": "swings",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
           "name": "amplitude",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": "Forearm swing in radians"
         }
       ]
@@ -2175,7 +2175,7 @@
         {
           "name": "startFrame",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
@@ -2205,13 +2205,13 @@
         {
           "name": "cycles",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
           "name": "phase",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Radians"
         }
       ]
@@ -2223,7 +2223,7 @@
         {
           "name": "startFrame",
           "required": false,
-          "type": "default",
+          "type": "number",
           "description": ""
         },
         {
@@ -2235,49 +2235,49 @@
         {
           "name": "at",
           "required": false,
-          "type": "optional",
+          "type": "array",
           "description": ""
         },
         {
           "name": "interval",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Average frames between blinks (default 72)"
         },
         {
           "name": "seed",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "closedFor",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Frames eyes stay closed (default 3)"
         },
         {
           "name": "switchLayerId",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "openChild",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "closedChild",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": ""
         },
         {
           "name": "eyeLayerIds",
           "required": false,
-          "type": "optional",
+          "type": "array",
           "description": ""
         }
       ]
@@ -2385,7 +2385,7 @@
         {
           "name": "holdFrames",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         }
       ]
@@ -2415,19 +2415,19 @@
         {
           "name": "interval",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "seed",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "base",
           "required": false,
-          "type": "optional",
+          "type": "object",
           "description": ""
         }
       ]
@@ -2445,43 +2445,43 @@
         {
           "name": "startFrame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "endFrame",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": ""
         },
         {
           "name": "fps",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Default: the document's FPS"
         },
         {
           "name": "audioPath",
           "required": false,
-          "type": "optional",
+          "type": "string",
           "description": "Soundtrack to mux (wav/mp3/aac...)"
         },
         {
           "name": "audioOffset",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Seconds: >0 skips into the audio, <0 delays it"
         },
         {
           "name": "crf",
           "required": false,
-          "type": "optional",
+          "type": "number",
           "description": "Quality: lower = better (default 18)"
         },
         {
           "name": "keepFrames",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": "Keep the PNG sequence (default false)"
         }
       ]
@@ -2505,7 +2505,7 @@
         {
           "name": "reencode",
           "required": false,
-          "type": "optional",
+          "type": "boolean",
           "description": ""
         }
       ]
