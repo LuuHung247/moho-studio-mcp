@@ -69,6 +69,17 @@ Rồi trong Moho: mở/ tạo một tài liệu → *Scripts → MohoMCP → Sta
 
 > **Cho agent tự cài:** dán vào Codex: *"Cài Moho Studio MCP giúp tôi: chạy `npx -y <URL> install-plugin`, rồi `codex mcp add moho -- cmd /c npx -y <URL>`, rồi `doctor` và báo kết quả."* (thay `<URL>` bằng link `.tgz` ở trên).
 
+## Thư mục làm việc (khuyến nghị)
+
+Công cụ cài bằng `npx` nên **không cần giữ mã nguồn** ở máy làm phim. Chỉ cần một thư mục dự án, ví dụ `D:\Ai project\moho-phim` (đường dẫn có dấu cách vẫn dùng được):
+
+```powershell
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz init-workspace "D:\Ai project\moho-phim" --skills
+```
+Lệnh tạo `assets/` (ảnh, âm thanh), `rigs/` (nhân vật đã rig), `scenes/` (mỗi cảnh một .moho), `render/` (video), cùng `AGENTS.md` ghi sẵn đường dẫn tuyệt đối và luật làm việc, và (với `--skills`) chép bộ skill vào `skills/` + `.claude/skills/`. **Mở Codex/Claude Code ngay trong thư mục đó**: agent tự đọc `AGENTS.md`, biết chỗ lưu và đọc skill, không cần bảo "bốc skill ra".
+
+Skill nằm trong thư mục khác thì agent **không tự nạp**. Hai lựa chọn: cài chung bằng `install-skills` (dùng được từ mọi thư mục), hoặc `init-workspace --skills` như trên (gắn với một dự án). Nên đặt tên file ASCII (không dấu) vì Lua của Moho trên Windows có thể lỗi với đường dẫn có dấu.
+
 ## Cập nhật lên bản mới
 
 `npx` lưu cache theo URL, nên link `latest` sẽ **không tự tải lại** bản mới trên máy đã chạy rồi. Cập nhật 3 bước:
@@ -87,7 +98,7 @@ npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/mo
 ```
 Sau đó **khởi động lại Moho và agent** (Codex/Claude) để nạp plugin, skill và server mới.
 
-Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.4.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.4.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
+Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.5.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.5.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
 
 **Dán cho agent tự cập nhật:** *"Cập nhật Moho Studio MCP lên bản mới nhất: xoá cache npx, chạy install-plugin và install-skills từ link latest, chạy doctor và --version rồi báo kết quả; nhắc tôi khởi động lại Moho và agent."*
 
@@ -107,7 +118,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 - **Sửa lỗi**: installer Windows/macOS gốc *không copy* `image/particle/switch.lua` (3 nhóm tool không chạy được); plugin có thể chạy cùng một request 2 lần nếu Moho vẽ lại trong lúc xử lý — đã thêm khoá chống re-entry.
 - **Bridge viết lại**: 56 khối try/catch giống hệt → bảng khai báo; batch tự chia lô (tối đa 200 thao tác/lô); test hợp đồng giữa bridge và danh sách cho phép của plugin.
 - **Bộ skill** cho agent (Codex / Claude Code), kiểm chứng bằng test.
-- **Kiểm thử**: 255 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
+- **Kiểm thử**: 259 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
 
 ## Giới hạn — nói thật
 
@@ -120,7 +131,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 ## Phát triển
 
 ```bash
-cd bridge && npm test            # 255 test TS (cần npm run build trước cho e2e)
+cd bridge && npm test            # 259 test TS (cần npm run build trước cho e2e)
 lua moho-plugin/tests/run_tests.lua   # test Lua (mock Moho)
 npm run docs                     # sinh lại docs/tool-reference.md
 ```

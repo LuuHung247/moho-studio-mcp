@@ -7,6 +7,7 @@ import { spawnSync } from "node:child_process";
 import { config } from "../config.js";
 import { findMohoRoot, installPlugin, InstallError, scriptsDir } from "./install-plugin.js";
 import { installSkills, type SkillTarget } from "./install-skills.js";
+import { initWorkspace } from "./init-workspace.js";
 
 const PACKAGE_ROOT = path.resolve(__dirname, "..", "..");
 const PLUGIN_SRC = path.join(PACKAGE_ROOT, "plugin");
@@ -18,6 +19,7 @@ Usage:
   moho-studio-mcp                     Start the MCP server (stdio) — this is what Codex/Claude run
   moho-studio-mcp install-plugin      Copy the Lua plugin into Moho  [--moho-dir <folder>]
   moho-studio-mcp install-skills      Copy the agent skills for Codex / Claude Code  [--target codex|claude|all] [--dir <folder>]
+  moho-studio-mcp init-workspace <dir> Create a project folder (assets/rigs/scenes/render + AGENTS.md)  [--skills copies the skills into it]
   moho-studio-mcp doctor              Check Node, ffmpeg, Moho and the plugin
   moho-studio-mcp --version
 `;
@@ -53,6 +55,26 @@ function runInstallSkills(args: string[]): number {
     const r = installSkills({ skillsSrc: SKILLS_SRC, targets, dir: flag(args, "--dir") });
     for (const d of r.destinations) console.log(`Installed ${d.skills.length} skills to ${d.dir}`);
     console.log("\nRestart the agent so it picks them up. Start a task with: \"Dùng skill moho-studio để ...\"");
+    return 0;
+  } catch (err) {
+    console.error(`ERROR: ${(err as Error).message}`);
+    return 1;
+  }
+}
+
+function runInitWorkspace(args: string[]): number {
+  const dir = args.find((a) => !a.startsWith("--"));
+  if (!dir) {
+    console.error("ERROR: give a folder, e.g. init-workspace \"D:\\Ai project\\moho-phim\" [--skills]");
+    return 1;
+  }
+  try {
+    const r = initWorkspace({ dir, skillsSrc: SKILLS_SRC, withSkills: args.includes("--skills") });
+    console.log(`Workspace: ${r.dir}`);
+    console.log(r.created.length ? `Created folders:\n  ${r.created.join("\n  ")}` : "Folders already existed.");
+    console.log(r.agentsFile === "created" ? "Wrote AGENTS.md (agents read it automatically)." : "AGENTS.md already exists — left untouched.");
+    if (r.skills.length) console.log(`Copied ${r.skills.length} skills to skills/ and .claude/skills/.`);
+    console.log("\nOpen your agent (Codex/Claude Code) in this folder and describe what you want.");
     return 0;
   } catch (err) {
     console.error(`ERROR: ${(err as Error).message}`);
@@ -102,6 +124,7 @@ export function runCli(argv: string[]): number | null {
   switch (cmd) {
     case "install-plugin": return runInstall(rest);
     case "install-skills": return runInstallSkills(rest);
+    case "init-workspace": return runInitWorkspace(rest);
     case "doctor": return runDoctor();
     case "--version": case "-v": console.log(config.server.version); return 0;
     case "--help": case "-h": case "help": console.log(HELP); return 0;
