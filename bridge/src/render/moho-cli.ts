@@ -49,9 +49,9 @@ export function candidateExecutables(platform: NodeJS.Platform, env: Env): strin
   const roots = candidateRoots(platform, env);
   if (platform === "darwin") {
     return roots.flatMap((r) => [
-      path.join(r, "Moho Pro.app", "Contents", "MacOS", "Moho"),
-      path.join(r, "Moho.app", "Contents", "MacOS", "Moho"),
-      path.join(r, "Moho Pro.app", "Contents", "MacOS", "Moho Pro"),
+      path.posix.join(r, "Moho Pro.app", "Contents", "MacOS", "Moho"),
+      path.posix.join(r, "Moho.app", "Contents", "MacOS", "Moho"),
+      path.posix.join(r, "Moho Pro.app", "Contents", "MacOS", "Moho Pro"),
     ]);
   }
   return roots.map((r) => path.win32.join(r, "Moho.exe"));
