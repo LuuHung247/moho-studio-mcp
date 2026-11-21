@@ -1,0 +1,27 @@
+# Add to ~/.codex/config.toml  (keep your existing keys; do NOT define a global [mcp_servers.moho],
+# so the orchestrator does not pay ~16k tokens for Moho tools it never calls directly).
+
+# Orchestrator: your main model, e.g.
+# model = "gpt-6.2-sol"
+
+[agents]
+default_subagent_model = "gpt-6-luna"            # every sub-agent defaults to the cheap model
+default_subagent_reasoning_effort = "medium"
+# Optional: only one worker may drive Moho at a time (also applies to other sub-agents):
+# max_concurrent_threads_per_session = 1
+
+[agents.moho_artist]
+description = "Moho worker: draws characters, props and backgrounds (draw_* tools). Give it one scene part with ids, colors and coordinates."
+config_file = "agents/moho-artist.toml"
+
+[agents.moho_rigger]
+description = "Moho worker: builds skeletons and attaches art to bones. Needs the bone/art layer ids from state.md."
+config_file = "agents/moho-rigger.toml"
+
+[agents.moho_animator]
+description = "Moho worker: walk/run cycles, gestures, blinks, lip-sync, camera moves. Give exact frames and bone layer id."
+config_file = "agents/moho-animator.toml"
+
+[agents.moho_exporter]
+description = "Moho worker: exports scenes to mp4/gif, joins scenes, adds audio. Give scene paths and output paths."
+config_file = "agents/moho-exporter.toml"

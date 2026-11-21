@@ -93,7 +93,7 @@ Danh sách 87 tool tốn khoảng **16.000 token cho mỗi agent mỗi phiên**.
 | `anim` | 59 | 9,8k | animation, lip-sync, camera |
 | `full` (mặc định) | 87 | 16,1k | việc đặc biệt, điều khiển giao diện |
 
-Có thể ghép: `core,render`. Ảnh chụp màn hình tự thu nhỏ (800 px; tuỳ chỉnh bằng `maxWidth`), kết quả JSON gọn. Skill `moho-delegation` hướng dẫn mô hình điều phối (agent chính lập kế hoạch và duyệt, sub-agent thao tác Moho), mẫu giao việc và báo cáo, file `state.md` lưu id layer/xương. **Chỉ một sub-agent được điều khiển Moho tại một thời điểm.**
+Có thể ghép: `core,render`. Ảnh chụp màn hình tự thu nhỏ (800 px; tuỳ chỉnh bằng `maxWidth`), kết quả JSON gọn. Skill `moho-delegation` hướng dẫn mô hình điều phối (agent chính lập kế hoạch và duyệt, sub-agent thao tác Moho), mẫu giao việc và báo cáo, file `state.md` lưu id layer/xương. **Chỉ một sub-agent được điều khiển Moho tại một thời điểm.** Cấu hình sẵn cho Codex (orchestrator `gpt-6.2-sol`, worker `gpt-6-luna`, mỗi vai trò một bộ tool riêng) nằm trong thư mục [codex/](codex): `config.snippet.toml` + `agents/*.toml`.
 
 ## Cập nhật lên bản mới
 
@@ -113,7 +113,7 @@ npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/mo
 ```
 Sau đó **khởi động lại Moho và agent** (Codex/Claude) để nạp plugin, skill và server mới.
 
-Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.6.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.6.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
+Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.6.1/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.6.1` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
 
 **Dán cho agent tự cập nhật:** *"Cập nhật Moho Studio MCP lên bản mới nhất: xoá cache npx, chạy install-plugin và install-skills từ link latest, chạy doctor và --version rồi báo kết quả; nhắc tôi khởi động lại Moho và agent."*
 

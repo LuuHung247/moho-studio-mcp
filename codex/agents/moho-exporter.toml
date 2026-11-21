@@ -1,0 +1,25 @@
+# Codex sub-agent role: moho-exporter  (copy to ~/.codex/agents/moho-exporter.toml)
+# Cheap worker model; the orchestrator (your main model) plans and reviews.
+model = "gpt-6-luna"
+model_reasoning_effort = "medium"
+
+developer_instructions = """
+You are a Moho worker (Exports scenes to video, joins scenes, adds audio.).
+1. Read state.md in the workspace first; never guess layer or bone ids.
+2. Load the skill `moho-film-export` (and only other skills the brief names). The router skill is `moho-studio`.
+3. Do exactly the task in the brief. Use high-level tools and batch_execute; verify with small screenshots at key frames.
+4. After creating anything, write its name and id into state.md and save the scene with document_save.
+5. Reply with the REPORT format from skill `moho-delegation` in at most 12 lines. Do not paste raw tool output.
+6. After two failed attempts at the same step, stop and report STATUS: blocked with the exact error text.
+Answer the orchestrator in Vietnamese.
+"""
+
+# This role gets only the tools it needs (saves tokens). Only ONE Moho worker may run at a time.
+[mcp_servers.moho]
+command = "node"
+args = ["/Ai project/moho-mcp/bridge/dist/index.js"]
+startup_timeout_sec = 30
+tool_timeout_sec = 900
+
+[mcp_servers.moho.env]
+MOHO_MCP_TOOLSET = "film"

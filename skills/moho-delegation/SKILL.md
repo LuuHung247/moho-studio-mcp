@@ -72,6 +72,11 @@ Workers save proofs with `render_frame` (small PNG files in the workspace); the 
 ## When a worker is stuck
 Two failed attempts → stop, report the exact error and what was tried, set STATUS blocked. The orchestrator then loads `moho-troubleshooting`, adjusts the brief, or asks the user. Workers must not retry in loops or switch to `full` toolset on their own.
 
+## Codex setup (models and roles)
+Codex supports this natively: `[agents] default_subagent_model` / `default_subagent_reasoning_effort`, and named roles `[agents.<name>]` with their own config layer (model, instructions, MCP servers). Ready-made files are in the repo folder `codex/` (`config.snippet.toml` + `agents/moho-artist|rigger|animator|exporter.toml`): orchestrator = your main model (e.g. `gpt-6.2-sol`), workers = `gpt-6-luna` ("fast and affordable, for easier tasks"), each worker role carrying its own `MOHO_MCP_TOOLSET`. Do NOT also define a global `[mcp_servers.moho]` — the orchestrator would pay for every Moho tool. Spawn one role at a time: `moho_artist` → `moho_rigger` → `moho_animator` → `moho_exporter`.
+Model guidance: the cheap model is reliable on recipe-style tasks (rig, animate, export, import, restyle). Drawing a *good-looking* character from a vague description is the weakest step — have the orchestrator write explicit shape lists, coordinates and colors in the brief, or do the art stage itself.
+Codex can also filter tools natively (`enabled_tools` / `disabled_tools` per MCP server) and cap a tool's output (`tools.<name>.output_token_limit`); `MOHO_MCP_TOOLSET` does the filtering server-side and also works with other clients.
+
 ## MCP config example (worker with a narrow toolset)
 ```toml
 [mcp_servers.moho]
