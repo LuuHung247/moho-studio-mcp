@@ -29,28 +29,40 @@ Codex / Claude  ──MCP (stdio)──►  bridge (Node.js, TypeScript)  ──
 
 AI nhận **cẩm nang sản xuất** ([bridge/src/guide.ts](bridge/src/guide.ts)) ngay khi kết nối, nên biết quy trình: vẽ → rig → animate → chụp màn hình kiểm tra → xuất.
 
-## Cài đặt (Windows)
+## Cài đặt nhanh (không cần clone repo)
 
-Yêu cầu: Moho Pro 14.x, [Node.js 20+](https://nodejs.org), [ffmpeg](https://ffmpeg.org/download.html) trong `PATH` (để xuất phim).
+Yêu cầu: Moho Pro 14.x, [Node.js 20+](https://nodejs.org), [ffmpeg](https://ffmpeg.org/download.html) trong `PATH` (chỉ cần khi xuất phim).
 
-1. **Cài plugin vào Moho** — đóng Moho, chuột phải `install-plugin.bat` → *Run as administrator*. (Nếu Moho ở thư mục khác: `set MOHO_DIR=D:\Moho 14` rồi chạy lại.)
-2. **Build bridge**:
-   ```
-   cd bridge
-   npm install
-   npm run build
-   ```
-3. **Khai báo MCP cho Codex** — thêm vào `%USERPROFILE%\.codex\config.toml` (mẫu: [codex-config.toml.example](codex-config.toml.example)):
-   ```toml
-   [mcp_servers.moho]
-   command = "node"
-   args = ["C:\\đường\\dẫn\\moho-studio-mcp\\bridge\\dist\\index.js"]
-   startup_timeout_sec = 20
-   tool_timeout_sec = 900
-   ```
-   Claude Code / Desktop: dùng [.mcp.json.example](.mcp.json.example).
-4. **Mở Moho** → menu *Scripts → MohoMCP → Start/Stop MohoMCP Server*, rồi **chọn tool "MohoMCP Poller"** trên thanh công cụ (nhóm cuối) và để nguyên. Mở/ tạo một tài liệu.
-5. Nói với Codex: *"Chạy system_ping rồi system_selfTest"*. Mọi dòng phải `ok` trước khi làm việc thật.
+**Windows** — mở terminal bằng *Run as administrator* (Moho nằm trong Program Files), rồi:
+
+```powershell
+# 1. Cài plugin vào Moho (tự tìm thư mục Moho)
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-plugin
+
+# 2. Đăng ký MCP cho Codex
+codex mcp add moho -- cmd /c npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz
+
+# 3. Kiểm tra
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz doctor
+```
+
+**macOS / Linux-shell**: giống trên, bỏ `cmd /c`: `codex mcp add moho -- npx -y <URL>`. Claude Code: `claude mcp add moho -- npx -y <URL>`.
+
+Hoặc ghi tay vào `%USERPROFILE%\.codex\config.toml` ([mẫu](codex-config.toml.example)):
+
+```toml
+[mcp_servers.moho]
+command = "cmd"
+args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz"]
+startup_timeout_sec = 60
+tool_timeout_sec = 900
+```
+
+Rồi trong Moho: mở/ tạo một tài liệu → *Scripts → MohoMCP → Start/Stop MohoMCP Server* → **chọn tool "MohoMCP Poller"** (nhóm cuối thanh công cụ) và để nguyên. Cuối cùng nói với Codex: *"Chạy system_ping rồi system_selfTest"*.
+
+> **Cho agent tự cài:** dán vào Codex: *"Cài Moho Studio MCP giúp tôi: chạy `npx -y <URL> install-plugin`, rồi `codex mcp add moho -- cmd /c npx -y <URL>`, rồi `doctor` và báo kết quả."* (thay `<URL>` bằng link `.tgz` ở trên).
+
+Bản dev (clone repo): xem mục *Phát triển*; installer cũ `install-plugin.bat` vẫn dùng được.
 
 ## Ví dụ yêu cầu bằng tiếng Việt
 
@@ -65,7 +77,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 - **`system_selfTest`**: tự kiểm tra toàn bộ đường API trên đúng bản Moho của bạn.
 - **Sửa lỗi**: installer Windows/macOS gốc *không copy* `image/particle/switch.lua` (3 nhóm tool không chạy được); plugin có thể chạy cùng một request 2 lần nếu Moho vẽ lại trong lúc xử lý — đã thêm khoá chống re-entry.
 - **Bridge viết lại**: 56 khối try/catch giống hệt → bảng khai báo; batch tự chia lô (tối đa 200 thao tác/lô); test hợp đồng giữa bridge và danh sách cho phép của plugin.
-- **Kiểm thử**: 129 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
+- **Kiểm thử**: 138 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
 
 ## Giới hạn — nói thật
 
@@ -78,7 +90,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 ## Phát triển
 
 ```bash
-cd bridge && npm test            # 129 test TS (cần npm run build trước cho e2e)
+cd bridge && npm test            # 138 test TS (cần npm run build trước cho e2e)
 lua moho-plugin/tests/run_tests.lua   # test Lua (mock Moho)
 npm run docs                     # sinh lại docs/tool-reference.md
 ```

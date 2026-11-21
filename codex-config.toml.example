@@ -1,8 +1,13 @@
 # Add to %USERPROFILE%\.codex\config.toml (Windows) or ~/.codex/config.toml
+# Recommended: run the released package (no clone needed). Windows needs "cmd /c" for npx.
 [mcp_servers.moho]
-command = "node"
-args = ["C:\\path\\to\\moho-studio-mcp\\bridge\\dist\\index.js"]
-startup_timeout_sec = 20
+command = "cmd"
+args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz"]
+startup_timeout_sec = 60
+
+# From a local clone instead:
+# command = "node"
+# args = ["C:\\path\\to\\moho-studio-mcp\\bridge\\dist\\index.js"]
 # Video exports can take minutes; give tool calls room.
 tool_timeout_sec = 900
 

@@ -17,6 +17,7 @@ import { MohoClient } from "./moho-client.js";
 import { registerTools } from "./tools/index.js";
 import { registerResources } from "./resources.js";
 import { PRODUCTION_GUIDE } from "./guide.js";
+import { runCli } from "./cli/index.js";
 
 // ---------------------------------------------------------------------------
 // Bootstrap
@@ -71,6 +72,11 @@ async function main(): Promise<void> {
 // ---------------------------------------------------------------------------
 // Run
 // ---------------------------------------------------------------------------
+
+const cliExit = runCli(process.argv.slice(2));
+if (cliExit !== null) {
+  process.exit(cliExit);
+}
 
 main().catch((err: unknown) => {
   process.stderr.write(

@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "docs": "node scripts/gen-tool-reference.mjs",
     "lua-test": "lua ../moho-plugin/tests/run_tests.lua",
-    "typecheck": "tsc -p tsconfig.test.json"
+    "typecheck": "tsc -p tsconfig.test.json",
+    "prepack": "node scripts/prepack.mjs && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
@@ -27,6 +28,23 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
-  }
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "plugin",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuuHung247/moho-studio-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "moho",
+    "animation",
+    "codex",
+    "claude"
+  ]
 }

@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: bridge/package-lock.json }
+      - name: Install ffmpeg (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg lua5.4
+      - name: Install ffmpeg (Windows)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
+      - run: npm ci
+        working-directory: bridge
+      - run: npm run build
+        working-directory: bridge
+      - run: npm run typecheck
+        working-directory: bridge
+      - run: npm test
+        working-directory: bridge
+      - run: npm audit --omit=dev
+        working-directory: bridge
+      - name: Lua tests
+        if: runner.os == 'Linux'
+        run: lua5.4 moho-plugin/tests/run_tests.lua
+      - name: Package smoke test
+        shell: bash
+        working-directory: bridge
+        run: |
+          npm pack --silent
+          mkdir ../smoke && cp moho-studio-mcp-*.tgz ../smoke/m.tgz && cd ../smoke
+          npx -y ./m.tgz --version
