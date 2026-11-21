@@ -46,7 +46,7 @@ codex mcp add moho -- cmd /c npx -y https://github.com/LuuHung247/moho-studio-mc
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz doctor
 ```
 
-**Cài bộ skill cho agent** (22 skill: 10 skill quy trình — định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa, GUI dự phòng, xử lý sự cố — và 12 skill **kỹ thuật/tham chiếu** rút từ **Moho 14 Users Manual và Tutorial Guide chính thức**: vẽ, bone/binding, lip-sync (kể cả 14.5 Audio Phonemes), timeline/cycling/actions, smart bone, frame-by-frame, ảnh bitmap, chiều sâu/hiệu ứng, tái sử dụng/reference layer, **Character Wizard**, tính năng mới 14/14.5 và bản đồ giao diện; mỗi bước ghi rõ `[API]` làm được bằng tool hay `[GUI]` phải thao tác giao diện):
+**Cài bộ skill cho agent** (23 skill: 10 skill quy trình — định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa, GUI dự phòng, xử lý sự cố — và 12 skill **kỹ thuật/tham chiếu** rút từ **Moho 14 Users Manual và Tutorial Guide chính thức**: vẽ, bone/binding, lip-sync (kể cả 14.5 Audio Phonemes), timeline/cycling/actions, smart bone, frame-by-frame, ảnh bitmap, chiều sâu/hiệu ứng, tái sử dụng/reference layer, **Character Wizard**, tính năng mới 14/14.5 và bản đồ giao diện; mỗi bước ghi rõ `[API]` làm được bằng tool hay `[GUI]` phải thao tác giao diện):
 
 ```powershell
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-skills
@@ -80,6 +80,21 @@ Lệnh tạo `assets/` (ảnh, âm thanh), `rigs/` (nhân vật đã rig), `scen
 
 Skill nằm trong thư mục khác thì agent **không tự nạp**. Hai lựa chọn: cài chung bằng `install-skills` (dùng được từ mọi thư mục), hoặc `init-workspace --skills` như trên (gắn với một dự án). Nên đặt tên file ASCII (không dấu) vì Lua của Moho trên Windows có thể lỗi với đường dẫn có dấu.
 
+## Tiết kiệm token / dùng sub-agent
+
+Danh sách 87 tool tốn khoảng **16.000 token cho mỗi agent mỗi phiên**. Cho agent làm việc (worker) chỉ thấy nhóm tool nó cần bằng biến `MOHO_MCP_TOOLSET` trong cấu hình MCP:
+
+| Giá trị | Tool | ≈ token | Dùng cho |
+|---|---|---|---|
+| `film` | 19 | 2,8k | xuất phim, nối cảnh |
+| `core` | 34 | 4,8k | tạo project, layer, import, batch |
+| `rig` | 50 | 8,2k | dựng xương, gắn layer |
+| `art` | 52 | 8,8k | vẽ nhân vật, bối cảnh |
+| `anim` | 59 | 9,8k | animation, lip-sync, camera |
+| `full` (mặc định) | 87 | 16,1k | việc đặc biệt, điều khiển giao diện |
+
+Có thể ghép: `core,render`. Ảnh chụp màn hình tự thu nhỏ (800 px; tuỳ chỉnh bằng `maxWidth`), kết quả JSON gọn. Skill `moho-delegation` hướng dẫn mô hình điều phối (agent chính lập kế hoạch và duyệt, sub-agent thao tác Moho), mẫu giao việc và báo cáo, file `state.md` lưu id layer/xương. **Chỉ một sub-agent được điều khiển Moho tại một thời điểm.**
+
 ## Cập nhật lên bản mới
 
 `npx` lưu cache theo URL, nên link `latest` sẽ **không tự tải lại** bản mới trên máy đã chạy rồi. Cập nhật 3 bước:
@@ -98,7 +113,7 @@ npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/mo
 ```
 Sau đó **khởi động lại Moho và agent** (Codex/Claude) để nạp plugin, skill và server mới.
 
-Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.5.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.5.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
+Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.6.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.6.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
 
 **Dán cho agent tự cập nhật:** *"Cập nhật Moho Studio MCP lên bản mới nhất: xoá cache npx, chạy install-plugin và install-skills từ link latest, chạy doctor và --version rồi báo kết quả; nhắc tôi khởi động lại Moho và agent."*
 
@@ -118,7 +133,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 - **Sửa lỗi**: installer Windows/macOS gốc *không copy* `image/particle/switch.lua` (3 nhóm tool không chạy được); plugin có thể chạy cùng một request 2 lần nếu Moho vẽ lại trong lúc xử lý — đã thêm khoá chống re-entry.
 - **Bridge viết lại**: 56 khối try/catch giống hệt → bảng khai báo; batch tự chia lô (tối đa 200 thao tác/lô); test hợp đồng giữa bridge và danh sách cho phép của plugin.
 - **Bộ skill** cho agent (Codex / Claude Code), kiểm chứng bằng test.
-- **Kiểm thử**: 259 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
+- **Kiểm thử**: 271 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
 
 ## Giới hạn — nói thật
 
@@ -131,7 +146,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 ## Phát triển
 
 ```bash
-cd bridge && npm test            # 259 test TS (cần npm run build trước cho e2e)
+cd bridge && npm test            # 271 test TS (cần npm run build trước cho e2e)
 lua moho-plugin/tests/run_tests.lua   # test Lua (mock Moho)
 npm run docs                     # sinh lại docs/tool-reference.md
 ```

@@ -158,3 +158,28 @@ export function decodeAudioPcm(audioPath: string, sampleRate: number, binary: st
     });
   });
 }
+
+/**
+ * Shrink a PNG so a screenshot costs far fewer model tokens (image tokens scale
+ * with pixel count: 1920x1080 ≈ 2.8k tokens, 800x450 ≈ 0.5k). Never throws:
+ * without ffmpeg the original is kept.
+ * @returns the width the file ended up with (0 if unknown).
+ */
+export async function downscalePng(file: string, maxWidth: number, binary: string = config.ffmpegPath): Promise<void> {
+  if (!(maxWidth > 0)) return;
+  const out = `${file}.small.png`;
+  try {
+    await runFfmpeg(["-y", "-loglevel", "error", "-i", file, "-vf", `scale='min(iw,${Math.floor(maxWidth)})':-2`, out], binary);
+    const { rename } = await import("node:fs/promises");
+    await rename(out, file);
+  } catch {
+    const { rm } = await import("node:fs/promises");
+    await rm(out, { force: true });
+  }
+}
+
+/** Width and height from a PNG header (no decoding). */
+export function pngSize(buf: Buffer): { width: number; height: number } {
+  if (buf.length < 24 || buf.toString("ascii", 1, 4) !== "PNG") return { width: 0, height: 0 };
+  return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+}

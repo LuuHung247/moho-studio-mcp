@@ -23,6 +23,8 @@ describe("init-workspace", () => {
     expect(agents).toContain(path.join(dir, "scenes"));
     expect(agents).toContain(path.join(dir, "render"));
     expect(r.agentsFile).toBe("created");
+    expect(fs.readFileSync(path.join(dir, "state.md"), "utf8")).toContain("Layers (name -> layerId)");
+    expect(agents).toContain(path.join(dir, "state.md"));
     expect(fs.existsSync(path.join(dir, "skills"))).toBe(false);
   });
 

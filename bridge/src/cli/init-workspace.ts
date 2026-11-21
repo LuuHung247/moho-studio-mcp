@@ -42,6 +42,9 @@ You control Moho Pro through the \`moho\` MCP server. The user speaks Vietnamese
 | One .moho per scene (canh01.moho, canh02.moho …) | \`${p("scenes")}\` |
 | Rendered videos and the final film | \`${p("render")}\` |
 
+## Shared memory
+Keep \`${p("state.md")}\` up to date: scene file, fps, frame range, layer ids and bone ids. Read it FIRST; never guess ids. Sub-agents start with no memory, so write ids there right after creating anything.
+
 ## Rules
 - Save scenes with \`document_save\` to \`scenes/\`; version before risky edits (canh01_v2.moho).
 - Export videos with \`render_exportVideo\` to \`render/\`; join scenes with \`render_concatVideos\`.
@@ -61,6 +64,12 @@ export function initWorkspace(opts: InitWorkspaceOptions): InitWorkspaceResult {
       fs.mkdirSync(target, { recursive: true });
       created.push(target);
     }
+  }
+
+  const stateFile = path.join(dir, "state.md");
+  if (!fs.existsSync(stateFile)) {
+    fs.writeFileSync(stateFile, "# State\nScene file: (none yet)   fps: 24   frames: 1-240\n\n## Layers (name -> layerId)\n\n## Bones (bone layer id; name -> boneId)\n\n## Done / Next\n", "utf8");
+    created.push(stateFile);
   }
 
   const agents = path.join(dir, "AGENTS.md");

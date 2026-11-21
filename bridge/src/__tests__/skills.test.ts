@@ -37,7 +37,7 @@ const TOOL_REF = /`((?:system|project|draw|layer|rig|anim|render|document|bone|m
 describe("skills", () => {
   it("ships the expected set", () => {
     expect([...skillNames].sort()).toEqual([
-      "moho-advanced-gui-fallback", "moho-animation", "moho-character-art", "moho-character-wizard", "moho-film-export",
+      "moho-advanced-gui-fallback", "moho-animation", "moho-delegation", "moho-character-art", "moho-character-wizard", "moho-film-export",
       "moho-gui-reference", "moho-revision", "moho-technique-smart-bones", "moho-whats-new-14",
       "moho-rigging", "moho-scene-camera", "moho-session-check", "moho-studio",
       "moho-technique-bones-binding", "moho-technique-depth-effects", "moho-technique-drawing",

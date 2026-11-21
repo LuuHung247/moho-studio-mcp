@@ -10,7 +10,7 @@ export interface ToolResult {
 }
 
 export function successContent(result: unknown): ToolResult {
-  return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  return { content: [{ type: "text", text: JSON.stringify(result) }] };
 }
 
 export function errorContent(err: unknown): ToolResult {

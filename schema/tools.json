@@ -1816,13 +1816,19 @@
           "name": "width",
           "required": false,
           "type": "number",
-          "description": "Scene mode only"
+          "description": "Render width in scene mode (rarely needed)"
         },
         {
           "name": "height",
           "required": false,
           "type": "number",
-          "description": "Scene mode only"
+          "description": "Render height in scene mode (rarely needed)"
+        },
+        {
+          "name": "maxWidth",
+          "required": false,
+          "type": "number",
+          "description": "Shrink the returned image to this width to save tokens (default 800 scene / 1280 full; 0 = original size). Use a larger value only to inspect fine detail."
         }
       ]
     },

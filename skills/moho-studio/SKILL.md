@@ -44,6 +44,7 @@ Technique skills (deeper "how Moho does it", from the official tutorials; each m
 | Smart bones: shape corrections, dials, head turns, 360° | `moho-technique-smart-bones` |
 | Moho 14/14.5 features (Paint Bucket Trace, Curvers, Liquid Shapes, dynamics, Audio Phonemes, EXR…) | `moho-whats-new-14` |
 | Where a tool/menu/tab is; operating the Moho interface | `moho-gui-reference` |
+| Splitting work between a main agent and sub-agents, saving tokens | `moho-delegation` |
 
 ## Typical full job (a short film)
 1. `moho-session-check` → 2. per scene: `project_new` + `moho-scene-camera` (background) → 3. `moho-character-art` → `moho-rigging` → `moho-animation` → 4. screenshots at key frames, `moho-revision` until approved → 5. `document_save` → `moho-film-export`.

@@ -5,8 +5,8 @@ command = "cmd"
 args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz"]
 startup_timeout_sec = 60
 
-# Pin a version for controlled upgrades (change v1.5.0 to upgrade):
-# args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/download/v1.5.0/moho-studio-mcp.tgz"]
+# Pin a version for controlled upgrades (change v1.6.0 to upgrade):
+# args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/download/v1.6.0/moho-studio-mcp.tgz"]
 
 # From a local clone instead:
 # command = "node"
@@ -18,3 +18,8 @@ tool_timeout_sec = 900
 # [mcp_servers.moho.env]
 # MOHO_MCP_FFMPEG = "C:\\ffmpeg\\bin\\ffmpeg.exe"
 # MOHO_MCP_BONE_ORIGIN = "tip"
+
+# Worker sub-agent with a narrow toolset (saves ~6-13k tokens per session).
+# Presets: film, core, rig, art, anim, full. Combine with commas, e.g. "core,render".
+# [mcp_servers.moho.env]
+# MOHO_MCP_TOOLSET = "anim"

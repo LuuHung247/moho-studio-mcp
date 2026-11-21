@@ -124,8 +124,9 @@ See your work. mode "scene" (default) renders the clean frame; "full" captures t
 |---|---|---|---|
 | `mode` | enum |  |  |
 | `frame` | number |  | Frame to render (default: current) |
-| `width` | number |  | Scene mode only |
-| `height` | number |  | Scene mode only |
+| `width` | number |  | Render width in scene mode (rarely needed) |
+| `height` | number |  | Render height in scene mode (rarely needed) |
+| `maxWidth` | number |  | Shrink the returned image to this width to save tokens (default 800 scene / 1280 full; 0 = original size). Use a larger value only to inspect fine detail. |
 
 ### `render_exportVideo`
 

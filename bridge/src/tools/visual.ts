@@ -10,14 +10,21 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { config } from "../config.js";
 import type { MohoClient } from "../moho-client.js";
 import { captureAppWindow } from "../platform-capture.js";
+import { downscalePng, pngSize } from "../render/ffmpeg.js";
 import { sendKeys, sendMouseClick, sendMouseDrag } from "../platform-input.js";
 import { callMoho, defineCustomTool } from "../tooling/define.js";
 import { imageContent, successContent } from "../tooling/results.js";
 
-async function readAndDelete(file: string): Promise<string> {
+const SCENE_MAX_WIDTH = 800;
+const WINDOW_MAX_WIDTH = 1280;
+
+async function readAndDelete(file: string, maxWidth: number): Promise<{ base64: string; width: number; height: number; originalWidth: number }> {
+  const original = pngSize(await fs.promises.readFile(file));
+  await downscalePng(file, maxWidth);
   const buf = await fs.promises.readFile(file);
   await fs.promises.unlink(file).catch(() => {});
-  return buf.toString("base64");
+  const size = pngSize(buf);
+  return { base64: buf.toString("base64"), width: size.width, height: size.height, originalWidth: original.width };
 }
 
 export function registerVisualTools(server: McpServer, client: MohoClient): void {
@@ -28,17 +35,19 @@ export function registerVisualTools(server: McpServer, client: MohoClient): void
     shape: {
       mode: z.enum(["scene", "full"]).optional(),
       frame: z.number().optional().describe("Frame to render (default: current)"),
-      width: z.number().optional().describe("Scene mode only"),
-      height: z.number().optional().describe("Scene mode only"),
+      width: z.number().optional().describe("Render width in scene mode (rarely needed)"),
+      height: z.number().optional().describe("Render height in scene mode (rarely needed)"),
+      maxWidth: z.number().min(0).max(4096).optional().describe("Shrink the returned image to this width to save tokens (default 800 scene / 1280 full; 0 = original size). Use a larger value only to inspect fine detail."),
     },
-    handler: async ({ mode, frame, width, height }) => {
+    handler: async ({ mode, frame, width, height, maxWidth }) => {
       if ((mode ?? "scene") === "full") {
         if (frame !== undefined) await callMoho(client, "document.setFrame", { frame });
         const dir = path.join(os.tmpdir(), "moho-mcp");
         await fs.promises.mkdir(dir, { recursive: true });
         const file = path.join(dir, `capture_${Date.now()}.png`);
-        const dims = await captureAppWindow(file);
-        return imageContent(await readAndDelete(file), { mode: "full", frame: frame ?? null, ...dims });
+        await captureAppWindow(file);
+        const img = await readAndDelete(file, maxWidth ?? WINDOW_MAX_WIDTH);
+        return imageContent(img.base64, { mode: "full", frame: frame ?? null, width: img.width, height: img.height, originalWidth: img.originalWidth });
       }
 
       const params: Record<string, unknown> = {};
@@ -48,8 +57,9 @@ export function registerVisualTools(server: McpServer, client: MohoClient): void
       const r = (await callMoho(client, "document.screenshot", params, {
         timeout: config.moho.renderTimeout,
       })) as { filePath: string; frame: number; width: number; height: number };
-      return imageContent(await readAndDelete(r.filePath), {
-        mode: "scene", frame: r.frame, width: r.width, height: r.height,
+      const img = await readAndDelete(r.filePath, maxWidth ?? SCENE_MAX_WIDTH);
+      return imageContent(img.base64, {
+        mode: "scene", frame: r.frame, width: img.width, height: img.height, originalWidth: img.originalWidth,
       });
     },
   });

@@ -41,6 +41,12 @@ class FakePlugin {
       results: (p.operations as unknown[]).map((_, i) => ({ success: true, index: i + 1, result: {} })),
       summary: { total: p.operations.length },
     }),
+    "document.screenshot": () => {
+      const file = path.join(os.tmpdir(), `e2e_shot_${Date.now()}.png`);
+      const r = spawnSync("ffmpeg", ["-y", "-loglevel", "error", "-f", "lavfi", "-i", "testsrc=size=1600x900", "-frames:v", "1", file]);
+      if (r.status !== 0) throw new Error("fake screenshot failed");
+      return { success: true, filePath: file, frame: 1, width: 1600, height: 900 };
+    },
     "render.frames": (p) => {
       const count = p.endFrame - p.startFrame + 1;
       fs.mkdirSync(p.dir, { recursive: true });
@@ -213,6 +219,19 @@ printf 'rendered-by-fake-moho' > "$out"
     expect(res.isError).toBe(true);
     expect(text).toMatch(/Moho renderer failed/);
     fs.rmSync(failFlag, { force: true });
+  });
+
+  it.skipIf(!hasFfmpeg)("returns screenshots shrunk to save tokens, full size on request", async () => {
+    const widthOf = (res: { content: Array<{ type?: string; data?: string }> }) => {
+      const img = res.content.find((c) => c.type === "image")!;
+      return Buffer.from(img.data!, "base64").readUInt32BE(16);
+    };
+    const small = (await client.callTool({ name: "document_screenshot", arguments: {} })) as never;
+    expect(widthOf(small)).toBe(800);
+    const full = (await client.callTool({ name: "document_screenshot", arguments: { maxWidth: 0 } })) as never;
+    expect(widthOf(full)).toBe(1600);
+    const tiny = (await client.callTool({ name: "document_screenshot", arguments: { maxWidth: 320 } })) as never;
+    expect(widthOf(tiny)).toBe(320);
   });
 
   it("rejects unsafe audio paths before touching ffmpeg", async () => {
