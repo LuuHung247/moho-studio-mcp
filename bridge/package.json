@@ -1,6 +1,6 @@
 {
   "name": "moho-studio-mcp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "MCP server that lets an AI build characters, rigs, animation and films in Moho Pro 14",
   "main": "dist/index.js",
   "bin": {

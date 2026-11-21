@@ -1,5 +1,5 @@
 {
-  "count": 86,
+  "count": 87,
   "tools": [
     {
       "name": "system_ping",
@@ -2296,6 +2296,54 @@
           "name": "cues",
           "required": true,
           "type": "array",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "anim_lipSyncFromAudio",
+      "description": "Automatic lip-sync like Moho's 'audio sync source': analyses the loudness of an audio file and sets a switch layer's mouth shape per frame (quiet = first/closed child, loud = last/wide-open child). Pass the mouth children ordered CLOSED -> OPEN. Works best with clean speech (no music/noise). For phoneme-accurate sync use Papagayo data through the Moho GUI.",
+      "params": [
+        {
+          "name": "switchLayerId",
+          "required": true,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "audioPath",
+          "required": true,
+          "type": "string",
+          "description": "Absolute path of the voice file (wav/mp3/…)"
+        },
+        {
+          "name": "mouths",
+          "required": true,
+          "type": "array",
+          "description": "Child layer names ordered from closed to wide open"
+        },
+        {
+          "name": "startFrame",
+          "required": false,
+          "type": "number",
+          "description": "Frame where the audio starts"
+        },
+        {
+          "name": "fps",
+          "required": false,
+          "type": "number",
+          "description": "Default: the document's FPS"
+        },
+        {
+          "name": "sensitivity",
+          "required": false,
+          "type": "number",
+          "description": ""
+        },
+        {
+          "name": "minHoldFrames",
+          "required": false,
+          "type": "number",
           "description": ""
         }
       ]

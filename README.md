@@ -14,7 +14,7 @@ Codex / Claude  ──MCP (stdio)──►  bridge (Node.js, TypeScript)  ──
 
 - **plugin Lua** ([moho-plugin/](moho-plugin)) chạy *bên trong* Moho, gọi API script chính thức.
 - **bridge** ([bridge/](bridge)) đổi MCP ↔ JSON-RPC, chứa các "công thức" animation và quy trình xuất phim.
-- **86 tool** (xem [docs/tool-reference.md](docs/tool-reference.md), sinh tự động từ code).
+- **87 tool** (xem [docs/tool-reference.md](docs/tool-reference.md), sinh tự động từ code).
 
 ## 6 mục tiêu → tool nào làm việc đó
 
@@ -22,7 +22,7 @@ Codex / Claude  ──MCP (stdio)──►  bridge (Node.js, TypeScript)  ──
 |---|---|
 | 1. Tạo nhân vật | `draw_ellipse` `draw_polygon` `draw_rect` `draw_polyline` (mỗi lệnh = 1 hình hoàn chỉnh có màu), `layer_createLayer`, `mesh_setShapeStyle` |
 | 2. Rigging | `rig_buildHumanoid` (20 xương, đặt tên chuẩn), `rig_buildSkeleton` (xương tuỳ ý), `rig_attachLayers` (parent / bind / flexi-bind), `rig_createSmartBone` |
-| 3. Animation | `anim_walkCycle` `anim_runCycle` `anim_wave` `anim_blink` `anim_lipSync` `anim_oscillate` `anim_layerPath` + `bone_setTransform` / `animation_setKeyframe` / `animation_setInterpolation` |
+| 3. Animation | `anim_walkCycle` `anim_runCycle` `anim_wave` `anim_blink` `anim_lipSync` `anim_lipSyncFromAudio` (khớp môi tự động theo âm lượng file thoại) `anim_oscillate` `anim_layerPath` + `bone_setTransform` / `animation_setKeyframe` / `animation_setInterpolation` |
 | 4. Dựng cảnh | `project_new` `project_import` `layer_duplicate` `layer_placeBehind` `anim_cameraMove` `anim_cameraShake` `anim_fade` `particle_setEmitter` |
 | 5. Sản xuất phim | `render_exportVideo` (mp4/mov/webm/gif + âm thanh) → `render_concatVideos` (nối các cảnh) `render_addAudio` |
 | 6. Chỉnh sửa theo phản hồi | `document_screenshot` (AI tự nhìn kết quả), `mesh_setShapeStyle`, `layer_setTransform`, chạy lại `anim_*` với tham số mới, `document_undo` |
@@ -46,12 +46,12 @@ codex mcp add moho -- cmd /c npx -y https://github.com/LuuHung247/moho-studio-mc
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz doctor
 ```
 
-**Cài bộ skill cho agent** (10 skill: định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa theo phản hồi, GUI dự phòng, xử lý sự cố):
+**Cài bộ skill cho agent** (17 skill: 10 skill quy trình — định tuyến, kiểm tra kết nối, vẽ nhân vật, rig, animation, dựng cảnh/camera, xuất phim, chỉnh sửa, GUI dự phòng, xử lý sự cố — và 7 skill **kỹ thuật** rút từ Tutorial Manual chính thức của Moho: vẽ, bone/binding, lip-sync, timeline/cycling/actions, frame-by-frame, chiều sâu/hiệu ứng, tái sử dụng/reference layer; mỗi bước ghi rõ `[API]` làm được bằng tool hay `[GUI]` phải thao tác giao diện):
 
 ```powershell
 npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-skills
 ```
-Lệnh copy vào `%USERPROFILE%\.codex\skills` (hoặc `$CODEX_HOME/skills`) và `%USERPROFILE%\.claude\skills`; thêm `--target codex` hoặc `--target claude` để chọn một nơi. Khởi động lại agent rồi nói: *"Dùng skill moho-studio, vẽ cho tôi…"*. Mã nguồn skill nằm ở [skills/](skills); mọi ví dụ trong đó được test tự động đối chiếu với schema tool thật.
+Lệnh copy vào `%USERPROFILE%\.codex\skills` (hoặc `$CODEX_HOME/skills`) và `%USERPROFILE%\.claude\skills`; thêm `--target codex` hoặc `--target claude` để chọn một nơi. Khởi động lại agent rồi nói: *"Dùng skill moho-studio, vẽ cho tôi…"*. Nguồn kỹ thuật: [Moho 13.5 Tutorial Manual](https://lostmarble.com/manual/13.5/Moho%20Tutorial%20Manual.pdf) (14.x chỉ thêm tính năng; manual 14 trên wiki chưa được dùng làm nguồn). Mã nguồn skill nằm ở [skills/](skills); mọi ví dụ trong đó được test tự động đối chiếu với schema tool thật.
 
 **macOS / Linux-shell**: giống trên, bỏ `cmd /c`: `codex mcp add moho -- npx -y <URL>`. Claude Code: `claude mcp add moho -- npx -y <URL>`.
 
@@ -85,7 +85,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 - **Sửa lỗi**: installer Windows/macOS gốc *không copy* `image/particle/switch.lua` (3 nhóm tool không chạy được); plugin có thể chạy cùng một request 2 lần nếu Moho vẽ lại trong lúc xử lý — đã thêm khoá chống re-entry.
 - **Bridge viết lại**: 56 khối try/catch giống hệt → bảng khai báo; batch tự chia lô (tối đa 200 thao tác/lô); test hợp đồng giữa bridge và danh sách cho phép của plugin.
 - **Bộ skill** cho agent (Codex / Claude Code), kiểm chứng bằng test.
-- **Kiểm thử**: 186 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
+- **Kiểm thử**: 227 test TypeScript (gồm end-to-end với plugin giả + ffmpeg thật) và 187 test Lua (mock Moho).
 
 ## Giới hạn — nói thật
 
@@ -98,7 +98,7 @@ Xem [docs/PROMPTS-VI.md](docs/PROMPTS-VI.md). Ngắn gọn:
 ## Phát triển
 
 ```bash
-cd bridge && npm test            # 186 test TS (cần npm run build trước cho e2e)
+cd bridge && npm test            # 227 test TS (cần npm run build trước cho e2e)
 lua moho-plugin/tests/run_tests.lua   # test Lua (mock Moho)
 npm run docs                     # sinh lại docs/tool-reference.md
 ```

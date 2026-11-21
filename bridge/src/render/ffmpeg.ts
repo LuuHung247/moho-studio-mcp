@@ -128,3 +128,33 @@ export function runFfmpeg(args: readonly string[], binary: string = config.ffmpe
     });
   });
 }
+
+const MAX_CAPTURE_BYTES = 256 * 1024 * 1024;
+
+/** Decode audio to mono signed 16-bit PCM and return the raw samples. */
+export function decodeAudioPcm(audioPath: string, sampleRate: number, binary: string = config.ffmpegPath): Promise<Int16Array> {
+  return new Promise((resolve, reject) => {
+    const child = spawn(binary, ["-v", "error", "-i", audioPath, "-vn", "-ac", "1", "-ar", String(sampleRate), "-f", "s16le", "pipe:1"],
+      { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
+    const chunks: Buffer[] = [];
+    let total = 0;
+    let stderr = "";
+    child.stdout.on("data", (d: Buffer) => {
+      total += d.length;
+      if (total > MAX_CAPTURE_BYTES) {
+        child.kill();
+        reject(new Error("Audio is too long to analyse in memory"));
+        return;
+      }
+      chunks.push(d);
+    });
+    child.stderr.on("data", (d: Buffer) => { stderr = (stderr + d.toString()).slice(-STDERR_TAIL_CHARS); });
+    child.on("error", (err: NodeJS.ErrnoException) =>
+      reject(err.code === "ENOENT" ? new Error(`ffmpeg not found ("${binary}"). Install ffmpeg or set MOHO_MCP_FFMPEG.`) : err));
+    child.on("close", (code) => {
+      if (code !== 0) return reject(new Error(`ffmpeg could not decode the audio (code ${code}): ${stderr.trim()}`));
+      const buf = Buffer.concat(chunks);
+      resolve(new Int16Array(buf.buffer, buf.byteOffset, Math.floor(buf.length / 2)).slice());
+    });
+  });
+}

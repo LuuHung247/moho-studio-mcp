@@ -34,7 +34,11 @@ All recipes write keyframes in one batched call and loop cleanly. `layerId` for 
 ```
 Without switch layers, squash eye layers: `{"startFrame": 1, "endFrame": 240, "eyeLayerIds": [31, 32]}`. Use `at: [frames…]` for exact blink times (e.g. on a surprise beat).
 
-Lip-sync: Moho cannot analyze audio through the API. Build cues yourself:
+Lip-sync from a voice file (automatic, like Moho's "audio sync source"): `anim_lipSyncFromAudio` — see `moho-technique-lipsync` for mouth setup (children ordered closed → wide open), Papagayo phoneme sync, and talking-head tricks.
+```mcp anim_lipSyncFromAudio
+{"switchLayerId": 40, "audioPath": "D:\\Phim\\thoai1.wav", "mouths": ["closed", "small", "medium", "wide"], "startFrame": 1}
+```
+Manual cues (when you have exact timing or phonemes). Build cues yourself:
 1. Get timings from the script/user (word start/end in seconds) or analyze audio with ffmpeg in a shell: `ffmpeg -i voice.wav -af silencedetect=noise=-35dB:d=0.12 -f null -` → speech segments.
 2. Per syllable alternate open shapes (`AI`, `E`, `O`, `U`) with `MBP`/`rest` on closures; end every phrase with `rest`. frame = round(seconds × fps).
 ```mcp anim_lipSync
@@ -56,6 +60,8 @@ Bounce = alternate low/high keys; squash/stretch via `scale`. Fade a character i
 - Any layer: `layer_setTransform`, `layer_setOpacity`, `animation_setKeyframe` (`value` number or `{x,y}`), `animation_setInterpolation` (`linear|smooth|ease_in|ease_out|step`; `step` for pops/blinks) — interpolation is set on layer channels.
 - Many keys at once: `batch_execute` (≤ 200 ops per call).
 Principles: anticipation before big moves, overlap/follow-through on tails and hair (`anim_oscillate` with `phase` offsets), hold poses 6–12 frames for acting beats, ease in/out for natural motion.
+
+More technique depth: loops/cycling and actions → `moho-technique-timeline-actions`; hand-drawn or swap-art → `moho-technique-frame-by-frame`.
 
 ## Verify
 Screenshot at the start, middle (two or three key poses) and end frames (`document_screenshot` with `frame`). Check feet planted, no detached parts, motion stays in frame. Re-run a recipe with new numbers to adjust (later keys overwrite the same frames); `document_undo` reverts the last change.

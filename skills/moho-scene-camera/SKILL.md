@@ -28,7 +28,7 @@ Draw backgrounds larger than the frame (x ±2.2, y ±1.2) so camera moves never 
 ```
 Works for PNG/JPG/PSD, SVG/EPS, audio (WAV/MP3), video. Returns the new `layerId`. Use `layer_setTransform` to position/scale it. Prefer ASCII paths.
 
-**Reusing a character in the next scene:** there is no cross-document copy through the API. Instead finish the character in scene 1, then for scene 2 `document_save` scene 1, `project_open` it and `document_save` with a NEW path (Save As, e.g. `canh2.moho`), then change the background, length (`project_setProperties`) and animation (keys at the same frames are overwritten; delete leftovers with `animation_deleteKeyframe`). Within one file use `layer_duplicate`.
+**Reusing a character in the next scene:** there is no cross-document copy through the API. Instead finish the character in scene 1, then for scene 2 `document_save` scene 1, `project_open` it and `document_save` with a NEW path (Save As, e.g. `canh2.moho`), then change the background, length (`project_setProperties`) and animation (keys at the same frames are overwritten; delete leftovers with `animation_deleteKeyframe`). Within one file use `layer_duplicate`; for many linked copies use reference layers; to pull a layer from another project use File → Import → Moho Object (see `moho-technique-reuse-references`).
 
 ## Duplicate and vary
 ```mcp layer_duplicate
@@ -49,7 +49,7 @@ Low-level: `document_setCamera` `{frame, posX, posY, posZ, tilt, pan, roll, zoom
 
 ## Transitions and depth
 - Fade in/out: `anim_fade` on a full-screen black rect layer or on the characters; fade from black: black `draw_rect` layer opacity 1→0.
-- Parallax: slide far layers slower than near layers with `anim_layerPath` over the same frames (far 20 %, mid 50 %, near 100 % of the distance).
+- Parallax: give layers different **Z depth** (`layer_setTransform` `transZ`: negative = farther, e.g. hills −2, sky −20; enlarge far layers) and pan the camera — see `moho-technique-depth-effects`. Fallback without Z: slide far layers slower than near ones with `anim_layerPath` (far 20 %, mid 50 %, near 100 % of the distance).
 - Depth blur: `layer_setBlur` on far/near layers; `layer_setShadow` for ground shadows.
 
 ## Weather and effects

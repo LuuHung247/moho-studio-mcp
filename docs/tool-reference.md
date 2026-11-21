@@ -1,6 +1,6 @@
 # Tool reference
 
-Generated from the code — 86 tools. Do not edit by hand (`npm run docs`).
+Generated from the code — 87 tools. Do not edit by hand (`npm run docs`).
 
 ## System & project
 
@@ -848,6 +848,20 @@ Set mouth shapes over time on a switch layer. cues = [{frame, mouth}] where mout
 |---|---|---|---|
 | `switchLayerId` | number | yes |  |
 | `cues` | array | yes |  |
+
+### `anim_lipSyncFromAudio`
+
+Automatic lip-sync like Moho's 'audio sync source': analyses the loudness of an audio file and sets a switch layer's mouth shape per frame (quiet = first/closed child, loud = last/wide-open child). Pass the mouth children ordered CLOSED -> OPEN. Works best with clean speech (no music/noise). For phoneme-accurate sync use Papagayo data through the Moho GUI.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `switchLayerId` | number | yes |  |
+| `audioPath` | string | yes | Absolute path of the voice file (wav/mp3/…) |
+| `mouths` | array | yes | Child layer names ordered from closed to wide open |
+| `startFrame` | number |  | Frame where the audio starts |
+| `fps` | number |  | Default: the document's FPS |
+| `sensitivity` | number |  |  |
+| `minHoldFrames` | number |  |  |
 
 ### `anim_layerPath`
 

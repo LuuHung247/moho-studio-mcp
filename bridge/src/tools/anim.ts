@@ -8,10 +8,12 @@ import {
   blinkOps, cameraMoveOps, cameraShakeOps, fadeOps, layerPathOps, lipSyncOps,
 } from "../recipes/face-camera.js";
 import { locomotionOps, RUN_PRESET, WALK_PRESET } from "../recipes/locomotion.js";
+import { audioToMouthCues } from "../recipes/audio-lipsync.js";
+import { assertSafePath, decodeAudioPcm } from "../render/ffmpeg.js";
 import { resolveRoles } from "../recipes/roles.js";
 import type { Operation } from "../recipes/types.js";
 import { runBatch } from "../tooling/batch.js";
-import { defineCustomTool } from "../tooling/define.js";
+import { callMoho, defineCustomTool } from "../tooling/define.js";
 import { successContent } from "../tooling/results.js";
 import { fetchBones } from "./rig.js";
 import { LIMITS } from "./schema.js";
@@ -122,6 +124,30 @@ export function registerAnimTools(server: McpServer, client: MohoClient): void {
       cues: z.array(z.object({ frame: z.number(), mouth: z.string() })).min(1).max(1000),
     },
     handler: async ({ switchLayerId, cues }) => runRecipe(client, "lipSync", lipSyncOps(switchLayerId, cues)),
+  });
+
+  const SAMPLE_RATE = 16000;
+  defineCustomTool(server, {
+    name: "anim_lipSyncFromAudio",
+    description:
+      "Automatic lip-sync like Moho's 'audio sync source': analyses the loudness of an audio file and sets a switch layer's mouth shape per frame (quiet = first/closed child, loud = last/wide-open child). Pass the mouth children ordered CLOSED -> OPEN. Works best with clean speech (no music/noise). For phoneme-accurate sync use Papagayo data through the Moho GUI.",
+    shape: {
+      switchLayerId: z.number().int(),
+      audioPath: z.string().max(4096).describe("Absolute path of the voice file (wav/mp3/…)"),
+      mouths: z.array(z.string()).min(2).max(32).describe("Child layer names ordered from closed to wide open"),
+      startFrame: z.number().default(1).describe("Frame where the audio starts"),
+      fps: z.number().positive().optional().describe("Default: the document's FPS"),
+      sensitivity: z.number().min(0.3).max(3).optional(),
+      minHoldFrames: z.number().int().min(1).max(12).optional(),
+    },
+    handler: async ({ switchLayerId, audioPath, mouths, startFrame, fps, sensitivity, minHoldFrames }) => {
+      assertSafePath(audioPath, "audioPath");
+      const docFps = fps ?? ((await callMoho(client, "document.getInfo")) as { fps: number }).fps;
+      const samples = await decodeAudioPcm(audioPath, SAMPLE_RATE);
+      const cues = audioToMouthCues(samples, SAMPLE_RATE, { mouths, fps: docFps, startFrame, sensitivity, minHoldFrames });
+      const res = await runRecipe(client, "lipSyncFromAudio", lipSyncOps(switchLayerId, cues));
+      return res;
+    },
   });
 
   defineCustomTool(server, {

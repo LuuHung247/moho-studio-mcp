@@ -22,8 +22,8 @@ describe("config", () => {
       expect(config.server.name).toBe("moho-mcp");
     });
 
-    it('has version "1.1.0"', () => {
-      expect(config.server.version).toBe("1.1.0");
+    it('has version "1.2.0"', () => {
+      expect(config.server.version).toBe("1.2.0");
     });
   });
 

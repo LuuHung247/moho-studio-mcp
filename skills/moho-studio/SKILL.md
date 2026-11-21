@@ -29,6 +29,17 @@ You drive Moho Pro 14 through MCP tools named `system_*`, `project_*`, `draw_*`,
 | Low-level meshes, bezier, GUI clicks, unsupported features | `moho-advanced-gui-fallback` |
 | An error message or wrong-looking result | `moho-troubleshooting` |
 
+Technique skills (deeper "how Moho does it", from the official tutorials; each marks what is `[API]` vs `[GUI]`):
+| Topic | Skill |
+|---|---|
+| Closed curves, holes, hidden edges, line width, shape order, masking, styles | `moho-technique-drawing` |
+| Bone layers, binding modes, bone strength, constraints, dynamics, IK | `moho-technique-bones-binding` |
+| Talking: auto/phoneme/manual lip-sync, `anim_lipSyncFromAudio` | `moho-technique-lipsync` |
+| Keyframes, interpolation, cycling loops, actions, smart bones | `moho-technique-timeline-actions` |
+| Hand-drawn frames, switch-layer swaps, image sequences | `moho-technique-frame-by-frame` |
+| Z depth/parallax, camera, glow/shadow, particles, physics, 3D | `moho-technique-depth-effects` |
+| Duplicates vs reference layers, importing objects, scene series | `moho-technique-reuse-references` |
+
 ## Typical full job (a short film)
 1. `moho-session-check` → 2. per scene: `project_new` + `moho-scene-camera` (background) → 3. `moho-character-art` → `moho-rigging` → `moho-animation` → 4. screenshots at key frames, `moho-revision` until approved → 5. `document_save` → `moho-film-export`.
 Ask the user only for creative choices (story, look, length). Decide technical details yourself.

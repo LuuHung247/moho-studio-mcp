@@ -145,6 +145,28 @@ describe.skipIf(!hasBuild)("bridge end-to-end (fake Moho)", () => {
     expect(batchCalls.every((c) => c.params.operations.length <= 200)).toBe(true);
   });
 
+  it.skipIf(!hasFfmpeg)("lip-syncs a real audio file end to end", async () => {
+    const wav = path.join(outDir, "voice.wav");
+    const gen = spawnSync("ffmpeg", ["-y", "-loglevel", "error", "-f", "lavfi", "-i", "sine=f=200:d=0.5",
+      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono:d=0.5", "-filter_complex", "[0][1]concat=n=2:v=0:a=1", wav]);
+    expect(gen.status).toBe(0);
+    const before = plugin.calls.length;
+    const r = (await call("anim_lipSyncFromAudio", {
+      switchLayerId: 40, audioPath: wav, mouths: ["closed", "small", "wide"], startFrame: 1,
+    })).json();
+    expect(r.failed).toBe(0);
+    const ops = plugin.calls.slice(before).filter((c) => c.method === "batch.execute").flatMap((c) => c.params.operations);
+    expect(ops.every((o: any) => o.method === "switch.setActive" && o.params.layerId === 40)).toBe(true);
+    expect(ops[0].params.childName).toBeDefined();
+    expect(ops.some((o: any) => o.params.childName === "wide")).toBe(true);
+    expect(ops[ops.length - 1].params.childName).toBe("closed");
+  });
+
+  it("rejects unsafe audio paths before touching ffmpeg", async () => {
+    const { res } = await call("anim_lipSyncFromAudio", { switchLayerId: 1, audioPath: "http://evil/x.wav", mouths: ["a", "b"] });
+    expect(res.isError).toBe(true);
+  });
+
   it("surfaces plugin errors as MCP errors", async () => {
     plugin.handlers["layer.getProperties"] = () => { throw new Error("Layer not found with absolute ID 99"); };
     const { res, text } = await call("layer_getProperties", { layerId: 99 });

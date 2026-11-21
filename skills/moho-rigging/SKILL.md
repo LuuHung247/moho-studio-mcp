@@ -41,7 +41,12 @@ Use the role names `hip, spine, neck, head, upper_arm_L/R, forearm_L/R, thigh_L/
 ```
 Rule of thumb for cartoon characters: **parent every part rigidly to one bone** (cutout style). It is reliable and looks good with `anim_*` recipes. Overlap joints (shoulder/elbow/knee) with round shapes so rotation does not show gaps.
 
-Also the art layers must live in the same group as (or below) the bone layer for bones to control them: put the bone layer inside the character group, art layers inside it or beside it as Moho requires; if a part does not follow, `layer_placeInGroup` it into the bone layer's group.
+**Art layers must be children of the bone layer** (inside it, like dragging them into it in the Layers panel); a bone layer controls only what it contains. Move each part in with `layer_placeInGroup` `{layerId: part, parentGroupId: <bone layer id>}`, or create parts with `parentId` = the bone layer id. Parts outside the bone layer will not move. More on binding modes (flexible vs region), bone strength and troubleshooting: `moho-technique-bones-binding`.
+
+## 2b. Make sure parts are inside the bone layer
+```mcp layer_placeInGroup
+{"layerId": 11, "parentGroupId": 20, "top": false}
+```
 
 ## 3. Test the rig
 Pose a few bones, screenshot, then undo the test keys:

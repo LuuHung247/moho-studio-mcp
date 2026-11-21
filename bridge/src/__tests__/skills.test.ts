@@ -38,7 +38,10 @@ describe("skills", () => {
   it("ships the expected set", () => {
     expect(skillNames.sort()).toEqual([
       "moho-advanced-gui-fallback", "moho-animation", "moho-character-art", "moho-film-export", "moho-revision",
-      "moho-rigging", "moho-scene-camera", "moho-session-check", "moho-studio", "moho-troubleshooting",
+      "moho-rigging", "moho-scene-camera", "moho-session-check", "moho-studio",
+      "moho-technique-bones-binding", "moho-technique-depth-effects", "moho-technique-drawing",
+      "moho-technique-frame-by-frame", "moho-technique-lipsync", "moho-technique-reuse-references",
+      "moho-technique-timeline-actions", "moho-troubleshooting",
     ]);
   });
 
@@ -83,6 +86,6 @@ describe("skills", () => {
 
   it("has substantial worked examples overall", () => {
     const total = skillNames.reduce((n, s) => n + [...read(s).matchAll(/```mcp /g)].length, 0);
-    expect(total).toBeGreaterThanOrEqual(25);
+    expect(total).toBeGreaterThanOrEqual(40);
   });
 });
