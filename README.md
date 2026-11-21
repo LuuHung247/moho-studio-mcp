@@ -69,6 +69,28 @@ Rồi trong Moho: mở/ tạo một tài liệu → *Scripts → MohoMCP → Sta
 
 > **Cho agent tự cài:** dán vào Codex: *"Cài Moho Studio MCP giúp tôi: chạy `npx -y <URL> install-plugin`, rồi `codex mcp add moho -- cmd /c npx -y <URL>`, rồi `doctor` và báo kết quả."* (thay `<URL>` bằng link `.tgz` ở trên).
 
+## Cập nhật lên bản mới
+
+`npx` lưu cache theo URL, nên link `latest` sẽ **không tự tải lại** bản mới trên máy đã chạy rồi. Cập nhật 3 bước:
+
+```powershell
+# 1. Xoá cache npx (Windows PowerShell)
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\npm-cache\_npx" -ErrorAction SilentlyContinue
+# macOS/Linux: rm -rf ~/.npm/_npx
+
+# 2. Cài lại plugin (Administrator) và skill
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-plugin
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz install-skills
+
+# 3. Kiểm tra phiên bản (phải khớp bản mới nhất ở trang Releases)
+npx -y https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz --version
+```
+Sau đó **khởi động lại Moho và agent** (Codex/Claude) để nạp plugin, skill và server mới.
+
+Muốn cập nhật có kiểm soát (khuyến nghị): ghim phiên bản trong cấu hình, ví dụ `.../releases/download/v1.2.0/moho-studio-mcp.tgz`; nâng cấp = đổi `v1.2.0` thành phiên bản mới (URL mới nên tự tải lại, không cần xoá cache).
+
+**Dán cho agent tự cập nhật:** *"Cập nhật Moho Studio MCP lên bản mới nhất: xoá cache npx, chạy install-plugin và install-skills từ link latest, chạy doctor và --version rồi báo kết quả; nhắc tôi khởi động lại Moho và agent."*
+
 Bản dev (clone repo): xem mục *Phát triển*; installer cũ `install-plugin.bat` vẫn dùng được.
 
 ## Ví dụ yêu cầu bằng tiếng Việt
