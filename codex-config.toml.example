@@ -5,8 +5,8 @@ command = "cmd"
 args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/latest/download/moho-studio-mcp.tgz"]
 startup_timeout_sec = 60
 
-# Pin a version for controlled upgrades (change v1.3.0 to upgrade):
-# args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/download/v1.3.0/moho-studio-mcp.tgz"]
+# Pin a version for controlled upgrades (change v1.4.0 to upgrade):
+# args = ["/c", "npx", "-y", "https://github.com/LuuHung247/moho-studio-mcp/releases/download/v1.4.0/moho-studio-mcp.tgz"]
 
 # From a local clone instead:
 # command = "node"

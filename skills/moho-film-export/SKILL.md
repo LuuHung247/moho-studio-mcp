@@ -14,11 +14,16 @@ If ffmpeg is missing, tell the user to install it (Windows: `winget install Gyan
 2. `document_getInfo` → confirm `fps`, `startFrame`, `endFrame`, size.
 3. Screenshots at first, middle and last frame — fix problems BEFORE rendering (rendering is slow).
 
+## Export engine: Moho's own renderer first
+`render_exportVideo` has `engine`: **"auto"** (default) uses **Moho's command-line renderer** when it finds the Moho executable (`Moho.exe`, or `MOHO_MCP_MOHO_EXE`): headless, does not block Moho's window, includes the project's audio layers, and exactly matches Export Animation. It first saves the document (`document_save`) because the renderer reads the file from disk. If that fails it **falls back to "frames"** (render PNGs through the plugin + ffmpeg) and reports `mohoEngineError`. Force one with `"engine": "moho"` (errors are shown) or `"frames"` (needed for `.webm` or when you override `fps`).
+Moho formats/presets (File → Export Animation): MP4 (MPEG4-AAC default; H.265-AAC needs a capable GPU), MOV (ProRes alpha, PNG alpha, MJPEG, MPEG4), AVI, ASF, Animated GIF (≤ 256 colors, no sound), image sequences (PNG, JPEG, BMP, TGA, TIFF, WebP, PSD, **EXR** in 14.5), SVG sequences. For compositing hand-off use PNG/EXR sequences; for sharing use MP4.
+Manual command line (if you must): `Moho.exe -r Scene.moho -f MP4 -options "MP4 (MPEG4-AAC)" -o out.mp4 -start 1 -end 240 -log render.log` — on Windows always pass `-log` (no console output); useful extras: `-halfsize yes` (fast preview), `-aa no`, `-layercomp AllComps -addlayercompsuffix yes` (render every layer comp), `-multithread no`.
+
 ## Export one scene
 ```mcp render_exportVideo
 {"outputPath": "D:\\Phim\\canh1.mp4"}
 ```
-- Renders every frame through Moho (PNG sequence in a temp folder) then encodes with ffmpeg; Moho's window is busy meanwhile. Expect roughly 0.2–2 s per frame depending on complexity.
+- With the frames engine it renders every frame through Moho (PNG sequence in a temp folder) then encodes with ffmpeg and Moho's window is busy meanwhile; with the Moho engine it runs headless. Expect roughly 0.2–2 s per frame depending on complexity.
 - Formats by extension: `.mp4` (H.264, default), `.mov`, `.webm`, `.gif` (no audio).
 - Partial: `startFrame`/`endFrame` for a preview range; `crf` 18 default (lower = better; 23 smaller files).
 - Long exports: warn the user that it takes minutes, and that Codex's tool timeout must allow it (`tool_timeout_sec = 900` in the MCP config). For > 600 frames export in ranges (e.g. 1–240, 241–480) as separate files and concat.

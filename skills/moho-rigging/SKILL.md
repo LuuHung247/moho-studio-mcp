@@ -58,12 +58,11 @@ Use `animation_deleteKeyframe` or `document_undo` to remove test poses. Check: a
 ## 4. Smart bones (dials) — only when asked for expressive controls
 Head turn, mouth open, eyelid etc. One call records the whole dial:
 ```mcp rig_createSmartBone
-{"layerId": 20, "controlBoneId": 9, "poses": [
-  {"frame": 1, "bones": [{"boneId": 3, "angle": 0.35}]},
-  {"frame": 2, "bones": [{"boneId": 3, "angle": -0.35}]}
+{"layerId": 20, "controlBoneId": 9, "controlAngle": 1.5708, "poses": [
+  {"frame": 24, "bones": [{"boneId": 3, "angle": 0.5}]}
 ]}
 ```
-It creates the action named after the control bone, records poses inside it, and returns to the main timeline. Frames are action-timeline frames; confirm the result with `layer_listActions` and a screenshot after rotating the control bone.
+It creates the action named after the control bone, records the poses inside it, keys the control bone itself to `controlAngle` at the last frame (this maps the bone's rotation to the action), and returns to the main timeline. Details, shape corrections, 360° and live use: `moho-technique-smart-bones`.
 
 ## Checklist before animating
 - [ ] Bone map saved. [ ] Every visible part follows a bone. [ ] Screenshot at rest pose matches the original drawing. [ ] `document_save`.

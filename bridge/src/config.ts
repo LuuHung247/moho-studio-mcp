@@ -25,6 +25,6 @@ export const config = {
   boneOrigin: (process.env.MOHO_MCP_BONE_ORIGIN === "tip" ? "tip" : "start") as "start" | "tip",
   server: {
     name: "moho-mcp",
-    version: "1.3.0",
+    version: "1.4.0",
   },
 } as const;

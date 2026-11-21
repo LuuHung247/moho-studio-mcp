@@ -140,7 +140,8 @@ Render the open document to a video file (.mp4, .mov, .webm or .gif). Renders ev
 | `audioPath` | string |  | Soundtrack to mux (wav/mp3/aac...) |
 | `audioOffset` | number |  | Seconds: >0 skips into the audio, <0 delays it |
 | `crf` | number |  | Quality: lower = better (default 18) |
-| `keepFrames` | boolean |  | Keep the PNG sequence (default false) |
+| `keepFrames` | boolean |  | Keep the PNG sequence (frames engine only, default false) |
+| `engine` | enum |  | "moho" = Moho's own command-line renderer (headless, includes the project's audio layers; needs the document saved), "frames" = render PNGs through the plugin then ffmpeg, "auto" = try moho, fall back to frames |
 
 ### `render_concatVideos`
 
@@ -603,12 +604,13 @@ Attach artwork layers to bones. mode "parent" makes the whole layer follow one b
 
 ### `rig_createSmartBone`
 
-Create a smart-bone dial in one call: creates the action for a control bone, records the given poses inside it, then returns to the main timeline. Each pose is {frame, bones:[{boneId, angle?, posX?, posY?, scale?}]} recorded inside the action (e.g. head-turn left/right, mouth open). Frames are action-timeline frames.
+Create a smart bone (Moho Pro) in one call. A smart bone ties the CONTROL bone's rotation to an action: while the action plays from frame 0 (neutral) to its last frame, the control bone rotates 0 -> controlAngle and the other bones/layers move as recorded. The tool creates the action named after the control bone, records every pose inside it, keys the control bone itself to controlAngle at the last frame, then returns to the main timeline. Use a long enough action (24+ frames) so in-betweens are smooth. Make the last-frame pose the extreme one (e.g. head turned fully).
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `layerId` | number | yes | Bone layer |
 | `controlBoneId` | number | yes | The bone that becomes the dial |
+| `controlAngle` | number |  | Radians the control bone reaches at the last frame (default PI/2 = 90 degrees) |
 | `poses` | array | yes |  |
 
 ## Mesh

@@ -130,3 +130,36 @@ describe("renderRoot", () => {
     expect(renderRoot("/tmp", { MOHO_MCP_RENDER_DIR: "D:\\r" })).toBe("D:\\r");
   });
 });
+
+import { buildMohoRenderArgs, candidateExecutables, findMohoExecutable, presetFor } from "../render/moho-cli.js";
+
+describe("Moho command-line renderer", () => {
+  it("maps output extensions to Moho export presets and refuses unsupported ones", () => {
+    expect(presetFor("/o.mp4")).toEqual({ format: "MP4", options: "MP4 (MPEG4-AAC)" });
+    expect(presetFor("/o.gif")).toEqual({ format: "Animated GIF" });
+    expect(presetFor("/o.webm")).toBeNull();
+  });
+
+  it("builds the documented argument list (no shell quoting needed)", () => {
+    const args = buildMohoRenderArgs({ docPath: "D:\\P\\a.moho", outputPath: "D:\\P\\a.mp4", startFrame: 1, endFrame: 48, logPath: "C:\\t\\r.log" });
+    expect(args).toEqual(["-r", "D:\\P\\a.moho", "-f", "MP4", "-options", "MP4 (MPEG4-AAC)", "-o", "D:\\P\\a.mp4", "-start", "1", "-end", "48", "-log", "C:\\t\\r.log"]);
+  });
+
+  it("omits -start/-end when not given", () => {
+    const args = buildMohoRenderArgs({ docPath: "/a.moho", outputPath: "/a.gif", logPath: "/l" });
+    expect(args).not.toContain("-start");
+    expect(args).toContain("Animated GIF");
+  });
+
+  it("finds the executable: env override first, then Program Files layouts", () => {
+    expect(candidateExecutables("win32", { MOHO_MCP_MOHO_EXE: "E:\\m\\Moho.exe" })).toEqual(["E:\\m\\Moho.exe"]);
+    const win = candidateExecutables("win32", { ProgramFiles: "C:\\Program Files" });
+    expect(win).toContain("C:\\Program Files\\Moho 14\\Moho.exe");
+    expect(findMohoExecutable("win32", { ProgramFiles: "C:\\Program Files" }, (p) => p === "C:\\Program Files\\Moho 14\\Moho.exe")).toBe("C:\\Program Files\\Moho 14\\Moho.exe");
+    expect(findMohoExecutable("win32", {}, () => false)).toBeUndefined();
+  });
+
+  it("uses the app-bundle binary on macOS", () => {
+    expect(candidateExecutables("darwin", {}).some((p) => p.endsWith("Contents/MacOS/Moho"))).toBe(true);
+  });
+});

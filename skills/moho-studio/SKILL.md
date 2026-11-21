@@ -40,6 +40,10 @@ Technique skills (deeper "how Moho does it", from the official tutorials; each m
 | Z depth/parallax, camera, glow/shadow, particles, physics, 3D | `moho-technique-depth-effects` |
 | Duplicates vs reference layers, importing objects, scene series | `moho-technique-reuse-references` |
 | Bitmap/PNG/photo/AI-generated art, image warping, cutout from images | `moho-technique-images` |
+| Fast pre-rigged character (Character Wizard, walk/jump/wave, 8 views) | `moho-character-wizard` |
+| Smart bones: shape corrections, dials, head turns, 360° | `moho-technique-smart-bones` |
+| Moho 14/14.5 features (Paint Bucket Trace, Curvers, Liquid Shapes, dynamics, Audio Phonemes, EXR…) | `moho-whats-new-14` |
+| Where a tool/menu/tab is; operating the Moho interface | `moho-gui-reference` |
 
 ## Typical full job (a short film)
 1. `moho-session-check` → 2. per scene: `project_new` + `moho-scene-camera` (background) → 3. `moho-character-art` → `moho-rigging` → `moho-animation` → 4. screenshots at key frames, `moho-revision` until approved → 5. `document_save` → `moho-film-export`.

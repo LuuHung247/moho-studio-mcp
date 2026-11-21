@@ -10,12 +10,13 @@ import type { MohoClient } from "../moho-client.js";
 import {
   assertSafePath, buildConcatArgs, buildConcatList, buildEncodeArgs, buildMuxArgs, formatFor, runFfmpeg,
 } from "../render/ffmpeg.js";
+import { findMohoExecutable, buildMohoRenderArgs, presetFor, runMohoRender } from "../render/moho-cli.js";
 import { chunk } from "../tooling/batch.js";
 import { LIMITS } from "./schema.js";
 import { callMoho, defineCustomTool } from "../tooling/define.js";
 import { successContent } from "../tooling/results.js";
 
-interface DocInfo { fps: number; startFrame: number; endFrame: number }
+interface DocInfo { fps: number; startFrame: number; endFrame: number; filePath?: string }
 
 interface RenderFramesResult { prefix: string; extension: string; digits: number }
 
@@ -60,7 +61,8 @@ export function registerProductionTools(server: McpServer, client: MohoClient): 
       audioPath: z.string().optional().describe("Soundtrack to mux (wav/mp3/aac...)"),
       audioOffset: z.number().optional().describe("Seconds: >0 skips into the audio, <0 delays it"),
       crf: z.number().min(0).max(51).optional().describe("Quality: lower = better (default 18)"),
-      keepFrames: z.boolean().optional().describe("Keep the PNG sequence (default false)"),
+      keepFrames: z.boolean().optional().describe("Keep the PNG sequence (frames engine only, default false)"),
+      engine: z.enum(["auto", "moho", "frames"]).default("auto").describe('"moho" = Moho\'s own command-line renderer (headless, includes the project\'s audio layers; needs the document saved), "frames" = render PNGs through the plugin then ffmpeg, "auto" = try moho, fall back to frames'),
     },
     handler: async (args) => {
       formatFor(assertSafePath(args.outputPath, "outputPath")); // fail fast on a bad path/extension
@@ -71,6 +73,41 @@ export function registerProductionTools(server: McpServer, client: MohoClient): 
       const end = args.endFrame ?? info.endFrame;
       const fps = args.fps ?? info.fps;
       if (end < start) throw new Error(`endFrame (${end}) is before startFrame (${start})`);
+
+      const wantsMoho = args.engine !== "frames" && presetFor(args.outputPath) !== null && fps === info.fps;
+      const mohoExe = wantsMoho ? findMohoExecutable() : undefined;
+      let mohoError: string | undefined;
+
+      if (mohoExe && info.filePath) {
+        try {
+          await fs.promises.mkdir(path.dirname(args.outputPath), { recursive: true });
+          await callMoho(client, "document.save", {}, { timeout: 30000 }); // render the current state
+          const logPath = path.join(renderRoot(), `moho_render_${Date.now()}.log`);
+          await fs.promises.mkdir(path.dirname(logPath), { recursive: true });
+          const target = args.audioPath ? path.join(renderRoot(), `moho_video_${Date.now()}${path.extname(args.outputPath)}`) : args.outputPath;
+          const mohoArgs = buildMohoRenderArgs({
+            docPath: info.filePath, outputPath: target, logPath,
+            startFrame: args.startFrame, endFrame: args.endFrame,
+          });
+          const budget = 60000 + (end - start + 1) * 4000;
+          log(`rendering with Moho command line (${mohoExe})`);
+          await runMohoRender(mohoExe, mohoArgs, target, logPath, budget);
+          if (args.audioPath) {
+            await runFfmpeg(buildMuxArgs(target, args.audioPath, args.outputPath));
+            await fs.promises.rm(target, { force: true });
+          }
+          return successContent({
+            engine: "moho", outputPath: args.outputPath, frames: end - start + 1, fps,
+            durationSeconds: Number(((end - start + 1) / fps).toFixed(2)), bytes: await fileSize(args.outputPath),
+          });
+        } catch (err) {
+          mohoError = (err as Error).message;
+          if (args.engine === "moho") throw err;
+          log(`Moho command-line render failed, falling back to frame export: ${mohoError.slice(0, 200)}`);
+        }
+      } else if (args.engine === "moho") {
+        throw new Error(mohoExe ? "The document has no file path: save it first (document_save with filePath)." : "Moho executable not found. Set MOHO_MCP_MOHO_EXE to Moho.exe, or use engine \"frames\".");
+      }
 
       const framesDir = path.join(renderRoot(), `render_${Date.now()}`);
       await fs.promises.mkdir(framesDir, { recursive: true });
@@ -99,6 +136,8 @@ export function registerProductionTools(server: McpServer, client: MohoClient): 
       }
 
       return successContent({
+        engine: "frames",
+        ...(mohoError ? { mohoEngineError: mohoError.slice(0, 300) } : {}),
         outputPath: args.outputPath,
         frames: frames.length,
         fps,

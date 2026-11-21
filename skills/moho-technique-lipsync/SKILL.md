@@ -28,6 +28,11 @@ Quiet audio → closed mouth, loud → widest. Works best on clean speech withou
 2. **[GUI]** Switch tab → *Select audio sync source* → choose the `.dat` file; import the matching audio (File → Import → Audio File, the lower section of the menu).
 3. No Papagayo? Build cues yourself from the script and timing and use the manual tool below.
 
+## 2b. Moho 14.5 phoneme tools **[GUI]**
+- **Audio Phonemes**: select the audio layer and run *Audio Phonemes*; phoneme labels (AI, E, O, MBP, …) appear on the timeline. Keep that audio layer visible in the timeline view and use the labels as timing reference for the Switch Selector (switch-layer mouths), frame-by-frame mouths or smart-bone mouths. No external Papagayo needed.
+- **Bone Lip Sync** script: for a **Mouth smart bone** (a bone + smart action named Mouth whose action contains phoneme-labelled poses), it generates the bone keyframes from the labels automatically. Edit the generated keys (change an angle = another mouth pose, move/add/remove keys). See `moho-technique-smart-bones`.
+- Read the labels back with `document_screenshot` `{"mode": "full"}` and convert them to cues for `anim_lipSync` if you prefer switch layers.
+
 ## 3. Manual cues
 ```mcp anim_lipSync
 {"switchLayerId": 40, "cues": [{"frame": 1, "mouth": "rest"}, {"frame": 8, "mouth": "AI"}, {"frame": 13, "mouth": "O"}, {"frame": 20, "mouth": "MBP"}, {"frame": 26, "mouth": "rest"}]}

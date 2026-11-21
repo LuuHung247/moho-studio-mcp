@@ -157,13 +157,14 @@ export function registerRigTools(server: McpServer, client: MohoClient): void {
   defineCustomTool(server, {
     name: "rig_createSmartBone",
     description:
-      "Create a smart-bone dial in one call: creates the action for a control bone, records the given poses inside it, then returns to the main timeline. Each pose is {frame, bones:[{boneId, angle?, posX?, posY?, scale?}]} recorded inside the action (e.g. head-turn left/right, mouth open). Frames are action-timeline frames.",
+      "Create a smart bone (Moho Pro) in one call. A smart bone ties the CONTROL bone's rotation to an action: while the action plays from frame 0 (neutral) to its last frame, the control bone rotates 0 -> controlAngle and the other bones/layers move as recorded. The tool creates the action named after the control bone, records every pose inside it, keys the control bone itself to controlAngle at the last frame, then returns to the main timeline. Use a long enough action (24+ frames) so in-betweens are smooth. Make the last-frame pose the extreme one (e.g. head turned fully).",
     shape: {
       layerId: z.number().int().describe("Bone layer"),
       controlBoneId: z.number().int().describe("The bone that becomes the dial"),
+      controlAngle: z.number().optional().describe("Radians the control bone reaches at the last frame (default PI/2 = 90 degrees)"),
       poses: z.array(smartPoseSchema).min(1).max(LIMITS.poses),
     },
-    handler: async ({ layerId, controlBoneId, poses }) => {
+    handler: async ({ layerId, controlBoneId, controlAngle, poses }) => {
       const control = (await fetchBones(client, layerId)).find((b) => b.id === controlBoneId);
       if (!control) throw new Error(`Bone ${controlBoneId} not found in layer ${layerId}`);
 
@@ -173,6 +174,11 @@ export function registerRigTools(server: McpServer, client: MohoClient): void {
         ...poses.flatMap((p) =>
           p.bones.map((b) => ({ method: "bone.setTransform", params: { layerId, frame: p.frame, ...b } })),
         ),
+        // The action's frame <-> angle mapping comes from the control bone's own key.
+        {
+          method: "bone.setTransform",
+          params: { layerId, boneId: controlBoneId, frame: Math.max(...poses.map((p) => p.frame)), angle: controlAngle ?? Math.PI / 2 },
+        },
         // Leaving the action must happen even if a pose failed, so it is its own step below.
       ];
       const summary = await runBatch(client, ops, { stopOnError: true });
